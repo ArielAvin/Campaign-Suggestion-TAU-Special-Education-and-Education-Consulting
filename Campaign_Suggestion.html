@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מתווה הצעה לקמפיין שיווקי | אוניברסיטת תל אביב</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Frank+Ruhl+Libre:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8fafc; /* Tailwind slate-50 */
+        }
+        .font-assistant { font-family: 'Assistant', sans-serif; }
+        .font-frank { font-family: 'Frank Ruhl Libre', serif; }
+
+        .main-content h1 {
+            font-family: 'Assistant', sans-serif;
+            font-size: 2.5rem; /* Equivalent to text-4xl */
+            font-weight: 700; /* bold */
+            color: #1e293b; /* slate-800 */
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #0d9488; /* teal-600 */
+        }
+        @media (min-width: 640px) { /* sm */
+            .main-content h1 {
+                font-size: 3rem; /* text-5xl */
+            }
+        }
+        .main-content h2 {
+            font-family: 'Assistant', sans-serif;
+            font-size: 2rem; /* ~text-3xl */
+            font-weight: 600; /* semibold */
+            color: #334155; /* slate-700 */
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+        }
+         @media (min-width: 640px) { /* sm */
+            .main-content h2 {
+                font-size: 2.25rem; /* text-4xl */
+            }
+        }
+        .main-content h3 {
+            font-family: 'Assistant', sans-serif;
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* semibold */
+            color: #475569; /* slate-600 */
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        @media (min-width: 640px) { /* sm */
+            .main-content h3 {
+                font-size: 1.875rem; /* text-3xl */
+            }
+        }
+        .main-content p, .main-content li, .main-content td, .main-content th {
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 1.125rem; /* text-lg */
+            line-height: 1.75; /* leading-relaxed */
+            color: #334155; /* slate-700 */
+        }
+        .main-content ul {
+            list-style: none;
+            padding-right: 0;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .main-content ul li {
+            position: relative;
+            padding-right: 1.75rem; /* Space for custom bullet */
+            margin-bottom: 0.5rem;
+        }
+        .main-content ul li::before {
+            content: "•";
+            color: #0d9488; /* teal-600 */
+            font-weight: bold;
+            font-size: 1.2em;
+            position: absolute;
+            right: 0;
+            top: 0.1em; 
+        }
+        .main-content ol {
+            list-style-position: inside;
+            padding-right: 0; /* Adjusted for RTL */
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .main-content ol li {
+            margin-bottom: 0.5rem;
+            padding-right: 0.5rem; /* Indent items */
+        }
+        .main-content hr {
+            border-top: 1px solid #cbd5e1; /* slate-300 */
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+        .main-content a {
+            color: #0d9488; /* teal-600 */
+            text-decoration: underline;
+        }
+        .main-content a:hover {
+            color: #0f766e; /* teal-700 */
+        }
+        .main-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem; /* Slightly smaller for tables */
+        }
+         .main-content th, .main-content td {
+            border: 1px solid #e2e8f0; /* slate-200 */
+            padding: 0.75rem;
+            text-align: right;
+            vertical-align: top; /* Ensure content aligns to top in cells */
+        }
+        .main-content thead th {
+            background-color: #f1f5f9; /* slate-100 */
+            font-family: 'Assistant', sans-serif;
+            font-weight: 600;
+            color: #1e293b; /* slate-800 */
+        }
+        .main-content tbody tr:nth-child(even) {
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .table-responsive-wrapper {
+            overflow-x: auto;
+            width: 100%;
+             -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .gemini-button {
+            background-color: #14b8a6; /* teal-500 */
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.8rem;
+            font-family: 'Assistant', sans-serif;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .gemini-button:hover {
+            background-color: #0d9488; /* teal-600 */
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-backdrop.visible .modal-content {
+            transform: scale(1);
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #0d9488; /* Teal */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="font-frank">
+
+    <div class="main-content max-w-5xl mx-auto bg-white p-8 sm:p-12 md:p-16 shadow-2xl my-8 sm:my-12 rounded-lg">
+
+        <h1>מתווה הצעה לקמפיין שיווקי: תואר שני בייעוץ חינוכי וחינוך מיוחד באוניברסיטת תל אביב</h1>
+
+        <section>
+            <h2>1. פרט מעורר השראה או עניין למשיכת תשומת לב</h2>
+            <div class="table-responsive-wrapper">
+                <table id="insightsTable">
+                    <thead>
+                        <tr>
+                            <th>חוקר/ת</th>
+                            <th>תגלית חדשנית / תובנת 'שורה תחתונה' מעוררת השראה</th>
+                            <th>מזהה מקור (פנימי)</th>
+                            <th>פעולה</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+
+            <h3>מקורות (Works Cited)</h3>
+            <ol id="worksCitedList">
+                </ol>
+        </section>
+
+        <hr/>
+
+        <section id="tauAdvantageSection">
+            <h2>2. למה אוניברסיטת תל אביב עדיפה על מכללות?</h2>
+            <p id="tauAdvantageText">אוניברסיטת תל אביב (את"א) מציעה יתרונות משמעותיים ללימודי תואר שני בייעוץ חינוכי ולקויות למידה בהשוואה למכללות אקדמיות בישראל. את"א מתהדרת במעמד אקדמי בינלאומי עדיף וסביבה עתירת מחקר עם סגל יוקרתי, המטפחים הזדמנויות מחקר ותזה נרחבות. תכנית הלימודים שלה מספקת עומק תיאורטי והתמחות רבים יותר, התומכים באופן קריטי בפרקטיקה מבוססת ראיות. הסטודנטים נהנים ממשאבים אוניברסיטאיים מקיפים, קהילה אקדמית תוססת ומגוונת המאפשרת יצירת קשרים מקצועיים (נטוורקינג) רחבים יותר, והזדמנויות מובנות להתנסות מעשית (פרקטיקום) והתמחות (סטאז') המשלבות מחקר עם יישום מעשי, במיוחד בייעוץ חינוכי. בעוד גם מכללות מציעות הכשרה מעשית, היוקרה של את"א, אפשרויות המימון הרחבות יותר, ורשת הבוגרים החזקה משפרים את הסיכויים לתפקידי הנהגה, קביעת מדיניות, קריירה אקדמית ותעסוקה בינלאומית, ומבדילים אותה מהמיקוד המקצועי-יישומי של מכללות רבות בהכשרת אנשי שטח לתפקידים מקומיים.</p>
+
+            <h3><strong>נקודות מפתח ליתרונות אוניברסיטת תל אביב:</strong></h3>
+            <ul id="tauAdvantageBullets">
+                <li><strong>מעמד אקדמי וסביבת מחקר:</strong>
+                    <ul class="pr-4">
+                        <li>מעמד אקדמי בינלאומי עדיף.</li>
+                        <li>סביבה עתירת מחקר עם סגל יוקרתי.</li>
+                        <li>הזדמנויות מחקר ותזה נרחבות.</li>
+                    </ul>
+                </li>
+                <li><strong>תוכנית לימודים:</strong>
+                    <ul class="pr-4">
+                        <li>עומק תיאורטי והתמחות רבים יותר.</li>
+                        <li>תמיכה קריטית בפרקטיקה מבוססת ראיות.</li>
+                    </ul>
+                </li>
+                <li><strong>משאבים וקהילה:</strong>
+                    <ul class="pr-4">
+                        <li>משאבים אוניברסיטאיים מקיפים.</li>
+                        <li>קהילה אקדמית תוססת ומגוונת.</li>
+                        <li>הזדמנויות ליצירת קשרים מקצועיים (נטוורקינג) רחבים יותר.</li>
+                    </ul>
+                </li>
+                <li><strong>התנסות מעשית:</strong>
+                    <ul class="pr-4">
+                        <li>הזדמנויות מובנות להתנסות מעשית (פרקטיקום) והתמחות (סטאז').</li>
+                        <li>שילוב מחקר עם יישום מעשי, במיוחד בייעוץ חינוכי.</li>
+                    </ul>
+                </li>
+                <li><strong>יתרונות נוספים:</strong>
+                    <ul class="pr-4">
+                        <li>יוקרה של המוסד.</li>
+                        <li>אפשרויות מימון רחבות יותר.</li>
+                        <li>רשת בוגרים חזקה.</li>
+                        <li>שיפור הסיכויים לתפקידי הנהגה, קביעת מדיניות, קריירה אקדמית ותעסוקה בינלאומית.</li>
+                    </ul>
+                </li>
+            </ul>
+            <button id="generateExecutiveSummary" class="gemini-button mt-4">✨ צור/י תקציר מנהלים משכנע</button>
+        </section>
+
+        <hr/>
+
+        <section>
+            <h2>3. פלטפורמה ומשווקי מפתח (יוצרי תוכן)</h2>
+            <div class="table-responsive-wrapper">
+                <table id="influencersTable">
+                    <thead>
+                        <tr>
+                            <th>שם (כינוי ברשת)</th>
+                            <th>עוקבים</th>
+                            <th>צפיות חודשיות (הערכה)</th>
+                            <th>גיל הקהל (משוער)</th>
+                            <th>סבירות לקבל חוזה מאת"א</th>
+                            <th>רשתות חברתיות</th>
+                            <th>פעולה</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="mt-16 pt-8 border-t border-slate-300 text-center">
+            <p class="text-sm text-slate-500 font-frank">© <span id="currentYear"></span> מתווה הצעה לקמפיין שיווקי. כל הזכויות שמורות (דוגמה).</p>
+        </footer>
+    </div>
+
+    <div id="geminiModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-assistant font-semibold text-slate-700">תשובת Gemini</h3>
+                <button id="closeModalButton" class="text-slate-500 hover:text-slate-700">&times;</button>
+            </div>
+            <div id="modalBody" class="font-frank text-slate-600 leading-relaxed">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const insightsData = [
+            { researcher: "פרופ' ריקרדו טרש", insight: "למוח האנושי קיבולת גמישות יוצאת דופן הניתנת לאימון (אימון מוחי) באמצעות תרגולים כמו מיינדפולנס, המובילים לשינויים קוגניטיביים ורגשיים.", sourceId: "1" },
+            { researcher: "פרופ' ריקרדו טרש", insight: "מדיטציה ומיינדפולנס אינן גישה אחידה המתאימה לכולם; ניתן ואף רצוי להתאים תרגולים באופן אישי לתועלת מרבית.", sourceId: "2" },
+            { researcher: "פרופ' ריקרדו טרש", insight: "שינוי חינוכי משמעותי מתחיל לעיתים קרובות מהשטח, ביוזמת הורים ואנשי חינוך פרואקטיביים המכניסים חידושים כמו מיינדפולנס לבתי הספר.", sourceId: "1" },
+            { researcher: "פרופ' ריקרדו טרש", insight: "מיינדפולנס מראה השפעות חיוביות מדידות על פעילות המוח והרווחה הנפשית אצל מבוגרים עם ADHD ודיסלקציה, ומציע כיוון תמיכה מבטיח שאינו תרופתי.", sourceId: "1" },
+            { researcher: "ד\"ר דרור דותן", insight: "לימוד לוח הכפל בסדר המסורתי (למשל, כפולות 2, אחר כך כפולות 3) עלול לעכב שינון עקב 'הפרעה פרואקטיבית', שבה מידע דומה משבש את הזיכרון.", sourceId: "3" },
+            { researcher: "ד\"ר דרור דותן", insight: "שינוי פשוט בסדר לימוד תרגילי לוח הכפל – הצגת תרגילים שונים זה מזה יחד – משפר באופן דרמטי את הלמידה והשליפה (שיעור הטעויות ירד בכמעט פי 1.5).", sourceId: "3" },
+            { researcher: "ד\"ר דרור דותן", insight: "חלק מהילדים המאובחנים בטעות עם דיסקלקוליה עשויים למעשה להתמודד עם לקות זיכרון הפגיעה במיוחד להפרעה הפרואקטיבית הנוצרת משיטות הוראה מסורתיות.", sourceId: "4" },
+            { researcher: "ד\"ר דרור דותן", insight: "מתמטיקה מתפקדת כשפה סימבולית; הבנת המבנה והחוקים הפנימיים שלה חיונית לפיתוח חשיבה מתמטית אמיתית.", sourceId: "5" },
+            { researcher: "ד\"ר שירלי הרשקו", insight: "ניתן למסגר מחדש ADHD לא רק כליקוי, אלא כדרך שונה לחוות ולעבד את העולם. עם הבנה, אסטרטגיות ותמיכה מתאימות, ניתן לתעל את המאפיינים הקשורים ל-ADHD לחוזקות והזדמנויות, במקום לתפוס אותם כ'קללה' בלבד.", sourceId: "6" },
+            { researcher: "ד\"ר שירלי הרשקו", insight: "אבחנת ADHD אינה גזר דין לחיים של פוטנציאל לא ממומש או מאבק מתמיד. על ידי סיוע לאנשים להבין מהי ADHD באמת – וחשוב מכך, מה היא אינה – ניתן לצייד אותם בכלים ותובנות להתמודדות יעילה עם אתגרים ולמימוש יכולותיהם הטבועות.", sourceId: "7" },
+            { researcher: "פרופ' דורית ארם", insight: "התפתחות אוריינית מוקדמת של ילדים אינה פסיבית; היא מעוצבת ומואצת באופן עמוק על ידי תיווך פעיל של מבוגרים ומעורבות אינטראקטיבית איכותית.", sourceId: "9" },
+            { researcher: "פרופ' דורית ארם", insight: "פעילויות כתיבה יומיומיות ופשוטות לכאורה, המשותפות למבוגרים וילדים צעירים – כגון יצירת פתקים, עריכת רשימות או כתיבה משותפת של סיפורים פשוטים – משמשות כזרזים רבי עוצמה ויעילים לפיתוח מיומנויות אוריינות בסיסיות.", sourceId: "10" },
+            { researcher: "פרופ' דורית ארם", insight: "מודל 'מחומש ההורות' מציע תוכנית מעשית להורות מיטבית המבוססת על חמישה מרכיבים חיוניים וקשורים זה בזה. עיקרון מעורר השראה מהמודל הוא: 'אנו יולדים את ילדינו עבורנו (נרקיסיסטי ואגואיסטי) אבל עלינו לגדלם עבורם!'", sourceId: "16" },
+            { researcher: "פרופ' דורית ארם", insight: "איכות האינטראקציות בין הורה לילד במהלך פעילויות כמו קריאת ספר משותפת וכתיבה שיתופית משפיעה באופן משמעותי לא רק על התפתחות האוריינות המוקדמת של הילד אלא גם על צמיחתו ומסוגלותו החברתית-רגשית, השפעה הנצפית גם אצל ילדים עם צרכים מיוחדים.", sourceId: "9" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "ממצא חדשני בנוגע להפרעת הספקטרום האוטיסטי (ASD) מצביע על כך שאופן עיבוד מידע חזותי היררכי (הבחנה בין 'היער' ל'עצים') אצל אנשים עם ASD מושפע יותר מתגובה מוגזמת למה שבולט או 'מושך תשומת לב' בשדה הראייה שלהם, מאשר מהטיה פנימית קבועה להתמקדות בפרטים מקומיים.", sourceId: "21" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "המחקר חשף קשר בין חומרת תסמיני ADHD ליעילות של רשתות מוחיות ספציפיות (הרשת הפרונטו-פריאטלית) במהלך משימות הדורשות עיכוב תגובה. קורלציה הפוכה זו מצביעה על סמן נוירולוגי פוטנציאלי ל-ADHD.", sourceId: "21" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "פריצת דרך משמעותית מראה שתוכניות אימון קשב ממוקדות, כגון אימון קשב מתקדם ממוחשב (CPAT), יכולות להוביל לשיפורים מוחשיים ומשמעותיים בתפקוד האקדמי של ילדים עם הפרעת הספקטרום האוטיסטי.", sourceId: "21" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "תובנה אבחונית חשובה היא שתסמינים הדומים לאלו של הפרעות קשב יכולים לעיתים להיות מיוחסים לבעיות נפוצות אך לעיתים קרובות מתעלמים מהן, כמו עייפות כרונית או תזונה לקויה. הדבר מדגיש את ההכרח בהערכה מקיפה והוליסטית לפני אבחון ADHD.", sourceId: "23" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "המעבדה של פרופ' שלו-מבורך זיהתה דפוסים ספציפיים ומדידים בתנועות עיניים המתרחשים במהלך קריאה, היכולים להבחין בקריאה לא קשובה אצל אנשים עם ADHD. ממצא זה מהווה צעד לקראת פיתוח מדדים אובייקטיביים יותר לאתגרי קשב.", sourceId: "22" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "המחקר מדגים שמיומנויות קשב אינן תכונות קבועות. אפילו ילדי גן המתפתחים באופן תקין יכולים להשיג שיפור משמעותי ביכולות הקשב המתמשך, הקשב הסלקטיבי ועיכוב התגובה שלהם באמצעות התערבויות ממוקדות בקבוצות קטנות, כגון תוכנית 'גן קשוב'.", sourceId: "22" }
+        ];
+
+        const worksCitedData = [
+            { id: 1, text: "ד”ר ריקרדו טרש - מיינדפולנס, קשב וריכוז והתמודדות עם לחץ נפשי | הפודקאסט ...", url: "https://shaharcohen.podbean.com/e/%D7%93-%D7%A8-%D7%A8%D7%99%D7%A7%D7%A8%D7%93%D7%95%D7%98%D7%A8%D7%A9%D7%9E%D7%99%D7%99%D7%A0%D7%93%D7%A4%D7%95%D7%9C%D7%A0%D7%A1-%D7%A7/" },
+            { id: 2, text: "פרק #110 | להגמיש את המוח עם ד\"ר ריקרדו טרש – פודקאסט.ישראל", url: "https://xn--4dbffo8box.xn--4dbrk0ce/podcast/podcast/%D7%A4%D7%A8%D7%A7-110-%D7%9C%D7%94%D7%92%D7%9E%D7%99%D7%A9-%D7%90%D7%AA-%D7%94%D7%9E%D7%95%D7%97-%D7%A2%D7%9D-%D7%93%D7%A8-%D7%A8%D7%99%D7%A7%D7%A8%D7%93%D7%95-%D7%98%D7%A8%D7%A9/" },
+            { id: 3, text: "What's the most effective way to learn the times table? - BOLD", url: "https://boldscience.org/whats-the-most-effective-way-to-learn-the-times-table/" },
+            { id: 4, text: "להפוך את החשבון הפשוט להיות פשוט - Dror Dotan's Mathematical ...", url: "http://www.mathinklab.org/granny/dotan-zviran-ginat-2021-multiplication-children-heb/" },
+            { id: 5, text: "Dror Dotan | Sagol School of Neuroscience | Tel Aviv University", url: "https://en-sagol.tau.ac.il/researchers/Dror-Dotan" },
+            { id: 6, text: "ד״ר שירלי הרשקו: הפרעת קשב וריכוז, ביטחון עצמי, קריירה וזוגיות | פודקאסט ...", url: "https://www.youtube.com/watch?v=p7oOz-PoEbc" },
+            { id: 7, text: "Making Sense of ADHD: How to Be More Productive and Less Stressed - A Guide for ADHD People: Hershko, Dr. Shirley - Amazon.com", url: "https://www.amazon.com/Making-Sense-ADHD-Productive-Stressed/dp/B0DVQ1BG7C" },
+            { id: 8, text: "Making Sense of ADHD: How to Be More Productive and Less Stressed - A Guide for ADHD People (ebook)", url: "https://www.amazon.com/Making-Sense-ADHD-Productive-Stressed-ebook/dp/B0DVH1965H" },
+            { id: 9, text: "פרופ' דורית ארם | אוניברסיטת ת\"א", url: "https://www.tau.ac.il/profile/dorita" },
+            { id: 10, text: "אוריינות בגיל הרך| עברית חינוך לשוני, יסודי | המרחב הפדגוגי | משרד החינוך", url: "https://pop.education.gov.il/tchumey_daat/ivrit_chinhch_leshony/yesodi/pedagogy-hebrew-linguistic-education/early-childhood-literacy/" },
+            { id: 11, text: "פרופ' דורית ארם | אוניברסיטת ת\"א (Speed Date)", url: "https://m.tau.ac.il/speed-date/dorit-aram" },
+            { id: 12, text: "(PDF) Parent–Child Interaction and Early Literacy Development - ResearchGate", url: "https://www.researchgate.net/publication/254303914_Parent-Child_Interaction_and_Early_Literacy_Development" },
+            { id: 13, text: "גיליון 3 | המרכז האקדמי לוינסקי-וינגייט (קמפוס לוינסקי) - גן - חוקרים@הגיל הרך", url: "https://kindergarten.levinsky.ac.il/notice/%D7%92%D7%9C%D7%99%D7%95%D7%9F-%D7%9E%D7%A1-3-%D7%97%D7%99%D7%A0%D7%95%D7%9A-%D7%91%D7%99%D7%AA%D7%99-%D7%9C%D7%99%D7%9C%D7%93%D7%99-%D7%92%D7%9F-%D7%91%D7%99%D7%A9%D7%A8%D7%90%D7%9C-%D7%94%D7%90/" },
+            { id: 14, text: "Dorit Aram (0000-0002-0984-7297) - ORCID", url: "https://orcid.org/0000-0002-0984-7297" },
+            { id: 15, text: "גיליון 4 | המרכז האקדמי לוינסקי-וינגייט (קמפוס לוינסקי) - גן - חוקרים@הגיל הרך", url: "https://kindergarten.levinsky.ac.il/notice/%D7%92%D7%9C%D7%99%D7%95%D7%9F-%D7%9E%D7%A1-4-%D7%90%D7%99%D7%A0%D7%98%D7%A8%D7%90%D7%A7%D7%A6%D7%99%D7%95%D7%AA-%D7%A9%D7%99%D7%97-%D7%91%D7%A7%D7%A8%D7%91-%D7%99%D7%9C%D7%93%D7%99%D7%9D-%D7%91/" },
+            { id: 16, text: "מודל מחומש ההורות - מחומש ההורות", url: "https://hamehumash.com/the-parenthood-pentagon/" },
+            { id: 17, text: "מחומש ההורות - עקרונות להורות מיטיבה - YouTube", url: "https://www.youtube.com/watch?v=MK7c0FnidOI" },
+            { id: 18, text: "Page 3 | שאלה טובה", url: "https://asking.podbean.com/page/3/" },
+            { id: 19, text: "Full article: “Let's Write Each Other Messages”: Association Between Involvement in Writing in a Preschool Online Forum and Early Literacy Progress", url: "https://www.tandfonline.com/doi/full/10.1080/10409289.2023.2172673" },
+            { id: 20, text: "(PDF) Aram, D., & Besser, S. (2009). Early literacy interventions... - ResearchGate", url: "https://www.researchgate.net/publication/280239774_Aram_D_Besser_S_2009_Early_literacy_interventions_Which_activities_to_include_At_what_age_to_start_And_who_will_implement_them_Infancia_y_Aprendizaje_322_171-187" },
+            { id: 21, text: "Lilach Shalev-Mevorach | Sagol School of Neuroscience | Tel Aviv ...", url: "https://en-sagol.tau.ac.il/researchers/Lilach-halev-Mevorach" },
+            { id: 22, text: "Lilach SHALEV | Head of Department | Professor | Tel Aviv ...", url: "https://www.researchgate.net/profile/Lilach-Shalev" },
+            { id: 23, text: "מה זאת הפרעת קשב - כאן 11", url: "https://www.kan.org.il/content/kan/podcasts/p-8171/%D7%94%D7%90%D7%9D-%D7%9B%D7%95%D7%9C%D7%A0%D7%95-%D7%A1%D7%95%D7%91%D7%9C%D7%99%D7%9D-%D7%9E%D7%94%D7%A4%D7%A8%D7%A2%D7%95%D7%AA-%D7%A7%D7%A9%D7%91/" },
+        ];
+        
+        const influencersData = [
+            { name: "דן (דני) בולר (`@ask__dani`)", followers: "כ-301,000 (טיקטוק); נוכחות משמעותית באינסטגרם. (כתבה ישנה בג'רוזלם פוסט ציינה 120,700 עוקבי טיקטוק).", views: "מיליונים (לדוגמה, סרטוני טיקטוק בודדים מקבלים 100K+ צפיות, נתונים ישנים ציינו 4M+ לייקים).", audienceAge: "25-45+ (בעוד התוכן שלו נגיש, העומק והנושאים כמו \"מדברים על חינוך\" ותקשורת מדעית כנראה מושכים קהל מבוגר משמעותי לצד סטודנטים).", likelihood: "סביר מאוד", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@ask__dani"}, {text:"אינסטגרם", url:"#"}] },
+            { name: "צח סימון (`@imale_ani_aba`)", followers: "400,000 (משולב פייסבוק, אינסטגרם, טיקטוק).", views: "מאות אלפים גבוהות עד מעל מיליון בפלטפורמות השונות (מבוסס על הקהילה הגדולה שלו ותוכן מגוון הכולל בלוג, סדנאות ופודקאסט המתמקד בהורות והתפתחות הילד).", audienceAge: "28-45 (בעיקר אבות, גם אמהות המתעניינות בהורות, התפתחות הילד).", likelihood: "סביר מאוד", socials: [{text:"פייסבוק", url:"#"}, {text:"אינסטגרם", url:"#"}, {text:"טיקטוק", url:"https://www.google.com/search?q=https://www.tiktok.com/%40imale_ani_aba"}] },
+            { name: "עינת נתן (`@einatnathan`)", followers: "משמעותי. סופרת רבי מכר, מרצה ציבורית, נוכחות בטלוויזיה/רדיו, פודקאסט פופולרי (\"אמא אמא\"). Starngage מפרטת אותה בקטגוריית החינוך. חשבון האינסטגרם שלה @einatnathan מוכר.", views: "גבוה, בפלטפורמות השונות שלה (אינסטגרם, פודקאסט, הרצאות, ספרים).", audienceAge: "28-55 (הורים, מחנכים).", likelihood: "סביר מאוד", socials: [{text:"אינסטגרם", url:"https://www.google.com/search?q=https://www.instagram.com/einatnathan"}, {text:"פודקאסט (\"אמא אמא\")", url:"#"}] },
+            { name: "ד\"ר יאיר פוזניאק (`@dryairpozniak`)", followers: "הערכה כ-5K-10K (מדיה חברתית אישית: טיקטוק @dryairpozniak, אינסטגרם @dr.yair.pozniak, אתר yairpozniak.com); ההשפעה מוגברת על ידי השתייכות ישירה ל\"אוניברסיטת תל אביב לנוער\" והפודקאסט שלו \"מסע אל גוף האדם\".", views: "עשרות אלפים (פודקאסט וסרטונים חברתיים המכסים ביולוגיה, אבולוציה, שיטות חינוכיות).", audienceAge: "24-45+ (תפקידו כדוקטור, מרצה, ותוכן על נושאים מדעיים עמוקים יותר כנראה מטים את קהלו להיות מבוגר יותר מאוכלוסיות סטודנטים כלליות).", likelihood: "סביר מאוד", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@dryairpozniak"}, {text:"אינסטגרם", url:"https://www.google.com/search?q=https://www.instagram.com/dr.yair.pozniak"}, {text:"אתר", url:"http://yairpozniak.com"}, {text:"פודקאסט", url:"#"}] },
+            { name: "ימית פרידמן (`@yamitfridman` - אתר מקצועי yamitfridman.com)", followers: "מספרי עוקבים ספציפיים במדיה החברתית אינם זמינים בקלות מקטעי המידע. יש לה אתר מקצועי, פייסבוק, אינסטגרם, וואטסאפ, ופודקאסט \"מחשבות על הורות\" עם ביקורות משתמשים.", views: "עשרות אלפים (בפודקאסט ובנוכחות מקוונת מקצועית המתמקדת בקלינאות תקשורת והדרכת הורים).", audienceAge: "28-50 (הורים, מחנכים המחפשים הדרכה מקצועית).", likelihood: "סביר", socials: [{text:"אתר", url:"http://yamitfridman.com"}] },
+            { name: "חן קלימיאן (`@hen.talkwithkids`)", followers: "סרטוני טיקטוק מראים מעורבות טובה (לדוגמה, סרטון אחד עם 11.4K לייקים). (מספר העוקבים לא צוין)", views: "עשרות עד מאות אלפים נמוכות (טיקטוק, עבור תוכן על קלינאות תקשורת).", audienceAge: "25-45 (הורים לילדים צעירים, מחנכים).", likelihood: "סביר", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@hen.talkwithkids"}] },
+            { name: "זיוה בקרמן (`@ziva.bakerman`)", followers: "סרטוני טיקטוק מראים מעורבות משמעותית (לדוגמה, סרטון אחד עם 46.8K לייקים). (מספר העוקבים לא צוין)", views: "פוטנציאל למאות אלפים גבוהות בטיקטוק כאשר סרטונים על ייעוץ הורים הופכים ויראליים.", audienceAge: "28-50 (הורים המחפשים הדרכה).", likelihood: "סביר", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@ziva.bakerman"}] },
+            { name: "נופר לנדסמן (`@nufarlandsmann`)", followers: "מספרים ספציפיים אינם זמינים מקטעי המידע, אך יש לה פרופילים פעילים באינסטגרם ובטיקטוק הרשומים באתר המקצועי שלה כמאמנת ADHD.", views: "עשרות אלפים (הערכה מבוססת על נוכחות פעילה בתחום מקצועי נישתי – אימון ADHD).", audienceAge: "25-50 (הורים לילדים/נוער עם ADHD, מחנכים).", likelihood: "סביר", socials: [{text:"אינסטגרם", url:"#"}, {text:"טיקטוק", url:"#"}] },
+            { name: "Hebrew by Inbal (`@hebrewbyinbal`)", followers: "הערכה כ-5K-20K (טיקטוק, מבוסס על לייקים עקביים במאות עד מעל אלף לסרטון).", views: "עשרות אלפים (טיקטוק, עבור תוכן ללימוד השפה העברית).", audienceAge: "24+ (לומדי עברית מבוגרים מרקעים מגוונים, מחנכים).", likelihood: "סביר", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@hebrewbyinbal"}, {text:"אתר", url:"#"}] },
+            { name: "שרון צונץ (zuntz.co.il)", followers: "מספרי עוקבים במדיה החברתית עבור IG/TikTok לא צוינו בקטעי המידע. ידועה כפסיכולוגית חינוכית ומרצה מומחית להורים ולצוותים חינוכיים בנושאים הכוללים לקויות למידה ו-ADHD.", views: "תלוי בנוכחות פעילה במדיה החברתית עבור Reels; מומחיותה תמשוך צפיות אם ייווצר תוכן.", audienceAge: "30-55 (הורים, מחנכים, אנשי מקצוע בהתפתחות הילד).", likelihood: "סביר", socials: [{text:"אתר", url:"http://zuntz.co.il"}] },
+            { name: "אהרון לזרוס (adhdcoach.com)", followers: "מספרי עוקבים במדיה החברתית עבור IG/TikTok לא צוינו בקטעי המידע. עובד סוציאלי מוסמך ומאמן ADHD מוסמך ADDCA לילדים, בני נוער, מבוגרים והורים בישראל.", views: "תלוי בנוכחות פעילה במדיה החברתית עבור Reels.", audienceAge: "25-55 (הורים, מבוגרים עם ADHD, מחנכים).", likelihood: "סביר", socials: [{text:"אתר", url:"http://adhdcoach.com"}] },
+            { name: "ד\"ר אייל דורון (eyaldoron.co.il)", followers: "לערוץ היוטיוב יש 760 מנויים; נוכחות באינסטגרם ובמדיה חברתית אחרת מוזכרת באתר שלו, המתמקדת בחינוך יצירתי והורות.", views: "תלוי בנוכחות פעילה ב-IG/TikTok עבור Reels.", audienceAge: "28-55 (מחנכים, הורים, אנשי מקצוע המתעניינים בחינוך יצירתי והורות).", likelihood: "סביר", socials: [{text:"אתר", url:"http://eyaldoron.co.il"}] }
+        ];
+
+        const modal = document.getElementById('geminiModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        function showModal(title, content) {
+            modalTitle.textContent = title;
+            modalBody.innerHTML = content; // Use innerHTML to allow for loading spinner
+            modal.classList.add('visible');
+        }
+
+        function hideModal() {
+            modal.classList.remove('visible');
+        }
+
+        closeModalButton.addEventListener('click', hideModal);
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                hideModal();
+            }
+        });
+
+        async function callGeminiAPI(prompt) {
+            showModal("מעבד בקשה...", '<div class="loading-spinner"></div><p class="text-center">טוען נתונים מ-Gemini...</p>');
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Gemini API Error:', errorData);
+                    throw new Error(`שגיאת API: ${response.status} ${response.statusText}. ${errorData?.error?.message || ''}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error('Unexpected API response structure:', result);
+                    throw new Error('מבנה תשובה לא צפוי מה-API.');
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                return `<p class="text-red-600">אירעה שגיאה בעת פנייה ל-Gemini API: ${error.message}</p>`;
+            }
+        }
+
+
+        function populateInsightsTable() {
+            const tableBody = document.getElementById('insightsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+            insightsData.forEach(item => {
+                const row = tableBody.insertRow();
+                row.insertCell().textContent = item.researcher;
+                row.insertCell().textContent = item.insight;
+                row.insertCell().textContent = item.sourceId;
+                
+                const actionCell = row.insertCell();
+                const button = document.createElement('button');
+                button.innerHTML = "✨ הרחב/י";
+                button.className = 'gemini-button';
+                button.onclick = async () => {
+                    const prompt = `Please elaborate on the following research insight in 2-3 concise sentences, explaining its potential implications for educational counseling or special education. Insight: "${item.insight}" (Researcher: ${item.researcher}). Respond in Hebrew.`;
+                    const geminiResponse = await callGeminiAPI(prompt);
+                    showModal(`הרחבה על תובנה מאת ${item.researcher}`, geminiResponse.replace(/\n/g, '<br>'));
+                };
+                actionCell.appendChild(button);
+                Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
+            });
+        }
+
+        function populateWorksCited() {
+            const listElement = document.getElementById('worksCitedList');
+            listElement.innerHTML = '';
+            worksCitedData.forEach(item => {
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = item.url;
+                link.textContent = item.text;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                listItem.appendChild(link);
+                listItem.innerHTML += ` (accessed May 28, 2025)`;
+                listElement.appendChild(listItem);
+            });
+        }
+        
+        document.getElementById('generateExecutiveSummary').addEventListener('click', async () => {
+            const advantageText = document.getElementById('tauAdvantageText').textContent;
+            const advantageBullets = Array.from(document.getElementById('tauAdvantageBullets').getElementsByTagName('li')).map(li => li.textContent.trim()).join('\n');
+            const fullText = `${advantageText}\n\nנקודות מפתח:\n${advantageBullets}`;
+            const prompt = `Based on the following text describing the advantages of Tel Aviv University's Master's program in Educational Counseling and Special Education, please generate a compelling executive summary of 3-4 bullet points, suitable for a busy decision-maker. Respond in Hebrew.\n\nText:\n"${fullText}"`;
+            const geminiResponse = await callGeminiAPI(prompt);
+            showModal("תקציר מנהלים (נוצר ע\"י Gemini)", geminiResponse.replace(/\n/g, '<br>'));
+        });
+
+        function populateInfluencersTable() {
+            const tableBody = document.getElementById('influencersTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+            influencersData.forEach(item => {
+                const row = tableBody.insertRow();
+                row.insertCell().textContent = item.name;
+                row.insertCell().textContent = item.followers;
+                row.insertCell().textContent = item.views;
+                row.insertCell().textContent = item.audienceAge;
+                row.insertCell().textContent = item.likelihood;
+
+                const socialsCell = row.insertCell();
+                item.socials.forEach((social, index) => {
+                    const link = document.createElement('a');
+                    link.href = social.url === '#' ? 'javascript:void(0);' : social.url;
+                    link.textContent = social.text;
+                    link.target = social.url === '#' ? '' : '_blank';
+                    link.rel = social.url === '#' ? '' : 'noopener noreferrer';
+                    socialsCell.appendChild(link);
+                    if (index < item.socials.length - 1) {
+                        socialsCell.appendChild(document.createTextNode(', '));
+                    }
+                });
+                
+                const actionCell = row.insertCell();
+                const button = document.createElement('button');
+                button.innerHTML = "✨ הצע/י פנייה";
+                button.className = 'gemini-button';
+                button.onclick = async () => {
+                    const prompt = `Draft a short, personalized outreach message (2-3 sentences) in Hebrew to the influencer ${item.name} to explore a potential collaboration for promoting Tel Aviv University's Master's program in Educational Counseling and Special Education. Briefly mention their relevance to the field based on their profile. Profile details: Followers - ${item.followers}, Audience Age - ${item.audienceAge}.`;
+                    const geminiResponse = await callGeminiAPI(prompt);
+                    showModal(`הצעת פנייה ל${item.name}`, geminiResponse.replace(/\n/g, '<br>'));
+                };
+                actionCell.appendChild(button);
+                Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
+            });
+        }
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        populateInsightsTable();
+        populateWorksCited();
+        populateInfluencersTable();
+    </script>
+</body>
+</html>

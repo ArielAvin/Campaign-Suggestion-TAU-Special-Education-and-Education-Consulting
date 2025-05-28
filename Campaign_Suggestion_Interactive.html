@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הצעה לקמפיין שיווקי: תואר שני באוניברסיטת תל אביב - אפליקציה אינטראקטיבית</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; 
+        }
+        .tab-button {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #0891b2; /* Tailwind cyan-600 */
+            color: white;
+        }
+        .tab-button:not(.active):hover {
+            background-color: #f0f9ff; /* Tailwind sky-50 */
+        }
+        .table-container {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px; 
+        }
+        @media (min-width: 768px) { 
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .table tr:hover {
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.open {
+            max-height: 1000px; 
+            transition: max-height 0.5s ease-in;
+        }
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 10px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #94a3b8; 
+            border-radius: 10px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #64748b; 
+        }
+        .gemini-button {
+            background-color: #14b8a6; /* teal-500 */
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.8rem;
+            font-family: 'Assistant', sans-serif; /* Consistent font */
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+            line-height: 1.2; /* Adjust line height for better emoji alignment */
+        }
+        .gemini-button:hover {
+            background-color: #0d9488; /* teal-600 */
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem; /* Adjusted padding */
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            font-family: 'Inter', sans-serif; /* Consistent font for modal */
+        }
+        .modal-backdrop.visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-title {
+             font-family: 'Assistant', sans-serif; /* Consistent font */
+        }
+        .modal-body {
+             font-family: 'Inter', sans-serif; /* Consistent font */
+             white-space: pre-wrap; /* Preserve line breaks from Gemini */
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; 
+            border-top: 4px solid #0d9488; /* Teal */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <!-- Visualization & Content Choices:
+        Section 1 (Insights): HTML table, JS row highlight/filter, Chart.js bar chart, Gemini API for insight elaboration. Goal: Inform, Explore, Deepen Understanding. Justification: Clear presentation, visual summary, contextual expansion.
+        Section 2 (TAU Advantage): HTML text, JS accordion, Gemini API for executive summary. Goal: Persuade, Inform, Summarize. Justification: Readable summary, quick overview for busy users.
+        Section 3 (Influencers): HTML table, JS sort/filter, Chart.js bar chart, Gemini API for outreach drafts. Goal: Compare, Organize, Inform, Facilitate Action. Justification: Data exploration, visual summary, starting point for communication.
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8" dir="rtl">
+
+    <div class="w-full max-w-6xl bg-white shadow-xl rounded-lg p-6 md:p-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-cyan-700 mb-2">הצעה לקמפיין שיווקי</h1>
+            <p class="text-xl text-slate-600">תואר שני בייעוץ חינוכי וחינוך מיוחד באוניברסיטת תל אביב</p>
+        </header>
+
+        <nav class="mb-8 flex flex-wrap justify-center gap-2 sm:gap-3 border-b border-slate-300 pb-4">
+            <button data-tab="insights" class="tab-button active text-sm sm:text-base font-medium py-2 px-3 sm:px-4 rounded-md text-slate-700 hover:bg-sky-50">תובנות מחקר מרכזיות</button>
+            <button data-tab="advantage" class="tab-button text-sm sm:text-base font-medium py-2 px-3 sm:px-4 rounded-md text-slate-700 hover:bg-sky-50">היתרון של אוניברסיטת תל אביב</button>
+            <button data-tab="influencers" class="tab-button text-sm sm:text-base font-medium py-2 px-3 sm:px-4 rounded-md text-slate-700 hover:bg-sky-50">משפיענים פוטנציאליים</button>
+        </nav>
+
+        <main>
+            <section id="insights" class="tab-content space-y-6">
+                <h2 class="text-2xl font-semibold text-cyan-600 border-r-4 border-cyan-500 pr-4">תובנות מחקר מרכזיות</h2>
+                <p class="text-slate-600 leading-relaxed">
+                    חלק זה מרכז תגליות ותובנות 'שורה תחתונה' מעוררות השראה מחוקרים מובילים בתחומים הרלוונטיים להצעה. כל תובנה מחוברת למקור מידע פנימי (מספרי) ומציעה הצצה למחקרים התומכים בגישות ובנושאים שבהם מתמקד התואר השני. ניתן לסנן את התובנות לפי שם החוקר/ת או להרחיב עליהן באמצעות Gemini.
+                </p>
+                
+                <div class="my-4">
+                    <label for="researcherFilter" class="block text-sm font-medium text-slate-700 mb-1">סינון לפי חוקר/ת:</label>
+                    <select id="researcherFilter" class="block w-full sm:w-1/2 md:w-1/3 p-2 border border-slate-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 text-sm">
+                        <option value="all">הכל</option>
+                        </select>
+                </div>
+
+                <div class="table-container border border-slate-200 rounded-lg shadow-sm">
+                    <table id="insightsTable" class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">חוקר/ת</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">תגלית / תובנה מרכזית</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">מזהה מקור</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">פעולה</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                            </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-slate-500 mt-2 text-center">מקורות מפורטים מופיעים ברשימת "Works Cited" המצורפת לדוח המקורי.</p>
+
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold text-cyan-600 mb-4 text-center">סיכום תובנות לפי חוקר/ת</h3>
+                    <div class="chart-container">
+                        <canvas id="researcherInsightsChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="advantage" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-semibold text-cyan-600 border-r-4 border-cyan-500 pr-4">היתרון של אוניברסיטת תל אביב</h2>
+                <p id="tauAdvantageIntro" class="text-slate-600 leading-relaxed">
+                    בסעיף זה מפורטים היתרונות המשמעותיים של לימודי תואר שני בייעוץ חינוכי ולקויות למידה באוניברסיטת תל אביב (את"א) בהשוואה למכללות אקדמיות אחרות. הדגש הוא על המעמד האקדמי, סביבת המחקר, תוכנית הלימודים, המשאבים, הקהילה וההזדמנויות להתנסות מעשית ונטוורקינג.
+                </p>
+                <div class="bg-sky-50 p-4 rounded-lg border border-sky-200">
+                    <p id="tauAdvantageMainText" class="text-slate-700 leading-relaxed">
+                        אוניברסיטת תל אביב (את"א) מציעה יתרונות משמעותיים ללימודי תואר שני בייעוץ חינוכי ולקויות למידה בהשוואה למכללות אקדמיות בישראל. את"א מתהדרת במעמד אקדמי בינלאומי עדיף וסביבה עתירת מחקר עם סגל יוקרתי, המטפחים הזדמנויות מחקר ותזה נרחבות. תכנית הלימודים שלה מספקת עומק תיאורטי והתמחות רבים יותר, התומכים באופן קריטי בפרקטיקה מבוססת ראיות. הסטודנטים נהנים ממשאבים אוניברסיטאיים מקיפים, קהילה אקדמית תוססת ומגוונת המאפשרת יצירת קשרים מקצועיים (נטוורקינג) רחבים יותר, והזדמנויות מובנות להתנסות מעשית (פרקטיקום) והתמחות (סטאז') המשלבות מחקר עם יישום מעשי, במיוחד בייעוץ חינוכי. בעוד גם מכללות מציעות הכשרה מעשית, היוקרה של את"א, אפשרויות המימון הרחבות יותר, ורשת הבוגרים החזקה משפרים את הסיכויים לתפקידי הנהגה, קביעת מדיניות, קריירה אקדמית ותעסוקה בינלאומית, ומבדילים אותה מהמיקוד המקצועי-יישומי של מכללות רבות בהכשרת אנשי שטח לתפקידים מקומיים.
+                    </p>
+                </div>
+                <div>
+                    <button class="accordion-toggle w-full text-right bg-slate-100 hover:bg-slate-200 p-3 rounded-md font-semibold text-slate-700 flex justify-between items-center">
+                        <span>נקודות מפתח ליתרונות אוניברסיטת תל אביב</span>
+                        <svg class="w-5 h-5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="tauAdvantageAccordionContent" class="accordion-content mt-2 px-3 text-slate-600">
+                        <ul class="list-disc list-inside space-y-2 leading-relaxed">
+                            <li>**מעמד אקדמי וסביבת מחקר:**
+                                <ul class="list-disc list-inside pr-4 mt-1 space-y-1">
+                                    <li>מעמד אקדמי בינלאומי עדיף.</li>
+                                    <li>סביבה עתירת מחקר עם סגל יוקרתי.</li>
+                                    <li>הזדמנויות מחקר ותזה נרחבות.</li>
+                                </ul>
+                            </li>
+                            <li>**תוכנית לימודים:**
+                                <ul class="list-disc list-inside pr-4 mt-1 space-y-1">
+                                    <li>עומק תיאורטי והתמחות רבים יותר.</li>
+                                    <li>תמיכה קריטית בפרקטיקה מבוססת ראיות.</li>
+                                </ul>
+                            </li>
+                            <li>**משאבים וקהילה:**
+                                <ul class="list-disc list-inside pr-4 mt-1 space-y-1">
+                                    <li>משאבים אוניברסיטאיים מקיפים.</li>
+                                    <li>קהילה אקדמית תוססת ומגוונת.</li>
+                                    <li>הזדמנויות ליצירת קשרים מקצועיים (נטוורקינג) רחבים יותר.</li>
+                                </ul>
+                            </li>
+                            <li>**התנסות מעשית:**
+                                <ul class="list-disc list-inside pr-4 mt-1 space-y-1">
+                                    <li>הזדמנויות מובנות להתנסות מעשית (פרקטיקום) והתמחות (סטאז').</li>
+                                    <li>שילוב מחקר עם יישום מעשי, במיוחד בייעוץ חינוכי.</li>
+                                </ul>
+                            </li>
+                            <li>**יתרונות נוספים:**
+                                <ul class="list-disc list-inside pr-4 mt-1 space-y-1">
+                                    <li>יוקרה של המוסד.</li>
+                                    <li>אפשרויות מימון רחבות יותר.</li>
+                                    <li>רשת בוגרים חזקה.</li>
+                                    <li>שיפור הסיכויים לתפקידי הנהגה, קביעת מדיניות, קריירה אקדמית ותעסוקה בינלאומית.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <button id="generateExecutiveSummaryBtn" class="gemini-button mt-4">✨ צור/י תקציר מנהלים משכנע</button>
+            </section>
+
+            <section id="influencers" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-semibold text-cyan-600 border-r-4 border-cyan-500 pr-4">פלטפורמה ומשווקי מפתח (יוצרי תוכן)</h2>
+                 <p class="text-slate-600 leading-relaxed">
+                    חלק זה מציג רשימה של משווקי מפתח פוטנציאליים ויוצרי תוכן, עם נתונים על קהל העוקבים שלהם, הערכת צפיות, גיל קהל היעד המשוער, וסבירות לשיתוף פעולה עם אוניברסיטת תל אביב. המידע נועד לסייע בבחירת שותפים מתאימים לקמפיין השיווקי. ניתן לסנן את רשימת המשפיענים לפי שמם או להציע להם פנייה אישית באמצעות Gemini.
+                </p>
+
+                <div class="my-4">
+                    <label for="influencerFilter" class="block text-sm font-medium text-slate-700 mb-1">סינון לפי שם משפיען/ית:</label>
+                    <input type="text" id="influencerFilter" placeholder="הקלד/י שם לסינון..." class="block w-full sm:w-1/2 md:w-1/3 p-2 border border-slate-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 text-sm">
+                </div>
+
+                <div class="table-container border border-slate-200 rounded-lg shadow-sm">
+                    <table id="influencersTable" class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">שם (כינוי ברשת)</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">עוקבים</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">צפיות חודשיות (הערכה)</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">גיל הקהל (משוער)</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">סבירות לקבל חוזה מאת"א</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">רשתות חברתיות</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">פעולה</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                            </tbody>
+                    </table>
+                </div>
+                 <div class="mt-8">
+                    <h3 class="text-xl font-semibold text-cyan-600 mb-4 text-center">ניתוח סבירות לשיתוף פעולה עם משפיענים</h3>
+                    <div class="chart-container">
+                        <canvas id="influencerLikelihoodChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-12 pt-6 border-t border-slate-300 text-center">
+            <p class="text-sm text-slate-500">&copy; <span id="currentYear"></span> הצעה לקמפיין שיווקי - אוניברסיטת תל אביב. פותח ככלי אינטראקטיבי.</p>
+        </footer>
+    </div>
+    
+    <div id="geminiModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="modal-title text-xl font-semibold text-slate-700">תשובת Gemini</h3>
+                <button id="closeModalButton" class="text-slate-500 hover:text-slate-700 text-2xl leading-none">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body text-slate-600 leading-relaxed">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const insightsData = [
+            { researcher: "פרופ' ריקרדו טרש", insight: "למוח האנושי קיבולת גמישות יוצאת דופן הניתנת לאימון (אימון מוחי) באמצעות תרגולים כמו מיינדפולנס, המובילים לשינויים קוגניטיביים ורגשיים.", sourceId: "1" },
+            { researcher: "פרופ' ריקרדו טרש", insight: "מדיטציה ומיינדפולנס אינן גישה אחידה המתאימה לכולם; ניתן ואף רצוי להתאים תרגולים באופן אישי לתועלת מרבית.", sourceId: "2" },
+            { researcher: "פרופ' ריקרדו טרש", insight: "שינוי חינוכי משמעותי מתחיל לעיתים קרובות מהשטח, ביוזמת הורים ואנשי חינוך פרואקטיביים המכניסים חידושים כמו מיינדפולנס לבתי הספר.", sourceId: "1" },
+            { researcher: "פרופ' ריקרדו טרש", insight: "מיינדפולנס מראה השפעות חיוביות מדידות על פעילות המוח והרווחה הנפשית אצל מבוגרים עם ADHD ודיסלקציה, ומציע כיוון תמיכה מבטיח שאינו תרופתי.", sourceId: "1" },
+            { researcher: "ד\"ר דרור דותן", insight: "לימוד לוח הכפל בסדר המסורתי (למשל, כפולות 2, אחר כך כפולות 3) עלול לעכב שינון עקב 'הפרעה פרואקטיבית', שבה מידע דומה משבש את הזיכרון.", sourceId: "3" },
+            { researcher: "ד\"ר דרור דותן", insight: "שינוי פשוט בסדר לימוד תרגילי לוח הכפל – הצגת תרגילים שונים זה מזה יחד – משפר באופן דרמטי את הלמידה והשליפה (שיעור הטעויות ירד בכמעט פי 1.5).", sourceId: "3" },
+            { researcher: "ד\"ר דרור דותן", insight: "חלק מהילדים המאובחנים בטעות עם דיסקלקוליה עשויים למעשה להתמודד עם לקות זיכרון הפגיעה במיוחד להפרעה הפרואקטיבית הנוצרת משיטות הוראה מסורתיות.", sourceId: "4" },
+            { researcher: "ד\"ר דרור דותן", insight: "מתמטיקה מתפקדת כשפה סימבולית; הבנת המבנה והחוקים הפנימיים שלה חיונית לפיתוח חשיבה מתמטית אמיתית.", sourceId: "5" },
+            { researcher: "ד\"ר שירלי הרשקו", insight: "ניתן למסגר מחדש ADHD לא רק כליקוי, אלא כדרך שונה לחוות ולעבד את העולם. עם הבנה, אסטרטגיות ותמיכה מתאימות, ניתן לתעל את המאפיינים הקשורים ל-ADHD לחוזקות והזדמנויות, במקום לתפוס אותם כ'קללה' בלבד.", sourceId: "6" },
+            { researcher: "ד\"ר שירלי הרשקו", insight: "אבחנת ADHD אינה גזר דין לחיים של פוטנציאל לא ממומש או מאבק מתמיד. על ידי סיוע לאנשים להבין מהי ADHD באמת – וחשוב מכך, מה היא אינה – ניתן לצייד אותם בכלים ותובנות להתמודדות יעילה עם אתגרים ולמימוש יכולותיהם הטבועות.", sourceId: "7" },
+            { researcher: "פרופ' דורית ארם", insight: "התפתחות אוריינית מוקדמת של ילדים אינה פסיבית; היא מעוצבת ומואצת באופן עמוק על ידי תיווך פעיל של מבוגרים ומעורבות אינטראקטיבית איכותית.", sourceId: "9" },
+            { researcher: "פרופ' דורית ארם", insight: "פעילויות כתיבה יומיומיות ופשוטות לכאורה, המשותפות למבוגרים וילדים צעירים – כגון יצירת פתקים, עריכת רשימות או כתיבה משותפת של סיפורים פשוטים – משמשות כזרזים רבי עוצמה ויעילים לפיתוח מיומנויות אוריינות בסיסיות.", sourceId: "10" },
+            { researcher: "פרופ' דורית ארם", insight: "מודל 'מחומש ההורות' מציע תוכנית מעשית להורות מיטבית המבוססת על חמישה מרכיבים חיוניים וקשורים זה בזה. עיקרון מעורר השראה מהמודל הוא: 'אנו יולדים את ילדינו עבורנו (נרקיסיסטי ואגואיסטי) אבל עלינו לגדלם עבורם!'", sourceId: "16" },
+            { researcher: "פרופ' דורית ארם", insight: "איכות האינטראקציות בין הורה לילד במהלך פעילויות כמו קריאת ספר משותפת וכתיבה שיתופית משפיעה באופן משמעותי לא רק על התפתחות האוריינות המוקדמת של הילד אלא גם על צמיחתו ומסוגלותו החברתית-רגשית, השפעה הנצפית גם אצל ילדים עם צרכים מיוחדים.", sourceId: "9" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "ממצא חדשני בנוגע להפרעת הספקטרום האוטיסטי (ASD) מצביע על כך שאופן עיבוד מידע חזותי היררכי (הבחנה בין 'היער' ל'עצים') אצל אנשים עם ASD מושפע יותר מתגובה מוגזמת למה שבולט או 'מושך תשומת לב' בשדה הראייה שלהם, מאשר מהטיה פנימית קבועה להתמקדות בפרטים מקומיים.", sourceId: "21" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "המחקר חשף קשר בין חומרת תסמיני ADHD ליעילות של רשתות מוחיות ספציפיות (הרשת הפרונטו-פריאטלית) במהלך משימות הדורשות עיכוב תגובה. קורלציה הפוכה זו מצביעה על סמן נוירולוגי פוטנציאלי ל-ADHD.", sourceId: "21" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "פריצת דרך משמעותית מראה שתוכניות אימון קשב ממוקדות, כגון אימון קשב מתקדם ממוחשב (CPAT), יכולות להוביל לשיפורים מוחשיים ומשמעותיים בתפקוד האקדמי של ילדים עם הפרעת הספקטרום האוטיסטי.", sourceId: "21" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "תובנה אבחונית חשובה היא שתסמינים הדומים לאלו של הפרעות קשב יכולים לעיתים להיות מיוחסים לבעיות נפוצות אך לעיתים קרובות מתעלמים מהן, כמו עייפות כרונית או תזונה לקויה. הדבר מדגיש את ההכרח בהערכה מקיפה והוליסטית לפני אבחון ADHD.", sourceId: "23" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "המעבדה של פרופ' שלו-מבורך זיהתה דפוסים ספציפיים ומדידים בתנועות עיניים המתרחשים במהלך קריאה, היכולים להבחין בקריאה לא קשובה אצל אנשים עם ADHD. ממצא זה מהווה צעד לקראת פיתוח מדדים אובייקטיביים יותר לאתגרי קשב.", sourceId: "22" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "המחקר מדגים שמיומנויות קשב אינן תכונות קבועות. אפילו ילדי גן המתפתחים באופן תקין יכולים להשיג שיפור משמעותי ביכולות הקשב המתמשך, הקשב הסלקטיבי ועיכוב התגובה שלהם באמצעות התערבויות ממוקדות בקבוצות קטנות, כגון תוכנית 'גן קשוב'.", sourceId: "22" }
+        ];
+
+        const influencersData = [
+             { name: "דן (דני) בולר (`@ask__dani`)", followers: "כ-301,000 (טיקטוק); נוכחות משמעותית באינסטגרם. (כתבה ישנה בג'רוזלם פוסט ציינה 120,700 עוקבי טיקטוק).", views: "מיליונים (לדוגמה, סרטוני טיקטוק בודדים מקבלים 100K+ צפיות, נתונים ישנים ציינו 4M+ לייקים).", audienceAge: "25-45+ (בעוד התוכן שלו נגיש, העומק והנושאים כמו \"מדברים על חינוך\" ותקשורת מדעית כנראה מושכים קהל מבוגר משמעותי לצד סטודנטים).", likelihood: "סביר מאוד", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@ask__dani"}, {text:"אינסטגרם", url:"#"}] },
+            { name: "צח סימון (`@imale_ani_aba`)", followers: "400,000 (משולב פייסבוק, אינסטגרם, טיקטוק).", views: "מאות אלפים גבוהות עד מעל מיליון בפלטפורמות השונות (מבוסס על הקהילה הגדולה שלו ותוכן מגוון הכולל בלוג, סדנאות ופודקאסט המתמקד בהורות והתפתחות הילד).", audienceAge: "28-45 (בעיקר אבות, גם אמהות המתעניינות בהורות, התפתחות הילד).", likelihood: "סביר מאוד", socials: [{text:"פייסבוק", url:"#"}, {text:"אינסטגרם", url:"#"}, {text:"טיקטוק", url:"https://www.google.com/search?q=https://www.tiktok.com/%40imale_ani_aba"}] },
+            { name: "עינת נתן (`@einatnathan`)", followers: "משמעותי. סופרת רבי מכר, מרצה ציבורית, נוכחות בטלוויזיה/רדיו, פודקאסט פופולרי (\"אמא אמא\"). Starngage מפרטת אותה בקטגוריית החינוך. חשבון האינסטגרם שלה @einatnathan מוכר.", views: "גבוה, בפלטפורמות השונות שלה (אינסטגרם, פודקאסט, הרצאות, ספרים).", audienceAge: "28-55 (הורים, מחנכים).", likelihood: "סביר מאוד", socials: [{text:"אינסטגרם", url:"https://www.google.com/search?q=https://www.instagram.com/einatnathan"}, {text:"פודקאסט (\"אמא אמא\")", url:"#"}] },
+            { name: "ד\"ר יאיר פוזניאק (`@dryairpozniak`)", followers: "הערכה כ-5K-10K (מדיה חברתית אישית: טיקטוק @dryairpozniak, אינסטגרם @dr.yair.pozniak, אתר yairpozniak.com); ההשפעה מוגברת על ידי השתייכות ישירה ל\"אוניברסיטת תל אביב לנוער\" והפודקאסט שלו \"מסע אל גוף האדם\".", views: "עשרות אלפים (פודקאסט וסרטונים חברתיים המכסים ביולוגיה, אבולוציה, שיטות חינוכיות).", audienceAge: "24-45+ (תפקידו כדוקטור, מרצה, ותוכן על נושאים מדעיים עמוקים יותר כנראה מטים את קהלו להיות מבוגר יותר מאוכלוסיות סטודנטים כלליות).", likelihood: "סביר מאוד", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@dryairpozniak"}, {text:"אינסטגרם", url:"https://www.google.com/search?q=https://www.instagram.com/dr.yair.pozniak"}, {text:"אתר", url:"http://yairpozniak.com"}, {text:"פודקאסט", url:"#"}] },
+            { name: "ימית פרידמן (`@yamitfridman` - אתר מקצועי yamitfridman.com)", followers: "מספרי עוקבים ספציפיים במדיה החברתית אינם זמינים בקלות מקטעי המידע. יש לה אתר מקצועי, פייסבוק, אינסטגרם, וואטסאפ, ופודקאסט \"מחשבות על הורות\" עם ביקורות משתמשים.", views: "עשרות אלפים (בפודקאסט ובנוכחות מקוונת מקצועית המתמקדת בקלינאות תקשורת והדרכת הורים).", audienceAge: "28-50 (הורים, מחנכים המחפשים הדרכה מקצועית).", likelihood: "סביר", socials: [{text:"אתר", url:"http://yamitfridman.com"}] },
+            { name: "חן קלימיאן (`@hen.talkwithkids`)", followers: "סרטוני טיקטוק מראים מעורבות טובה (לדוגמה, סרטון אחד עם 11.4K לייקים). (מספר העוקבים לא צוין)", views: "עשרות עד מאות אלפים נמוכות (טיקטוק, עבור תוכן על קלינאות תקשורת).", audienceAge: "25-45 (הורים לילדים צעירים, מחנכים).", likelihood: "סביר", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@hen.talkwithkids"}] },
+            { name: "זיוה בקרמן (`@ziva.bakerman`)", followers: "סרטוני טיקטוק מראים מעורבות משמעותית (לדוגמה, סרטון אחד עם 46.8K לייקים). (מספר העוקבים לא צוין)", views: "פוטנציאל למאות אלפים גבוהות בטיקטוק כאשר סרטונים על ייעוץ הורים הופכים ויראליים.", audienceAge: "28-50 (הורים המחפשים הדרכה).", likelihood: "סביר", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@ziva.bakerman"}] },
+            { name: "נופר לנדסמן (`@nufarlandsmann`)", followers: "מספרים ספציפיים אינם זמינים מקטעי המידע, אך יש לה פרופילים פעילים באינסטגרם ובטיקטוק הרשומים באתר המקצועי שלה כמאמנת ADHD.", views: "עשרות אלפים (הערכה מבוססת על נוכחות פעילה בתחום מקצועי נישתי – אימון ADHD).", audienceAge: "25-50 (הורים לילדים/נוער עם ADHD, מחנכים).", likelihood: "סביר", socials: [{text:"אינסטגרם", url:"#"}, {text:"טיקטוק", url:"#"}] },
+            { name: "Hebrew by Inbal (`@hebrewbyinbal`)", followers: "הערכה כ-5K-20K (טיקטוק, מבוסס על לייקים עקביים במאות עד מעל אלף לסרטון).", views: "עשרות אלפים (טיקטוק, עבור תוכן ללימוד השפה העברית).", audienceAge: "24+ (לומדי עברית מבוגרים מרקעים מגוונים, מחנכים).", likelihood: "סביר", socials: [{text:"טיקטוק", url:"https://www.tiktok.com/@hebrewbyinbal"}, {text:"אתר", url:"#"}] },
+            { name: "שרון צונץ (zuntz.co.il)", followers: "מספרי עוקבים במדיה החברתית עבור IG/TikTok לא צוינו בקטעי המידע. ידועה כפסיכולוגית חינוכית ומרצה מומחית להורים ולצוותים חינוכיים בנושאים הכוללים לקויות למידה ו-ADHD.", views: "תלוי בנוכחות פעילה במדיה החברתית עבור Reels; מומחיותה תמשוך צפיות אם ייווצר תוכן.", audienceAge: "30-55 (הורים, מחנכים, אנשי מקצוע בהתפתחות הילד).", likelihood: "סביר", socials: [{text:"אתר", url:"http://zuntz.co.il"}] },
+            { name: "אהרון לזרוס (adhdcoach.com)", followers: "מספרי עוקבים במדיה החברתית עבור IG/TikTok לא צוינו בקטעי המידע. עובד סוציאלי מוסמך ומאמן ADHD מוסמך ADDCA לילדים, בני נוער, מבוגרים והורים בישראל.", views: "תלוי בנוכחות פעילה במדיה החברתית עבור Reels.", audienceAge: "25-55 (הורים, מבוגרים עם ADHD, מחנכים).", likelihood: "סביר", socials: [{text:"אתר", url:"http://adhdcoach.com"}] },
+            { name: "ד\"ר אייל דורון (eyaldoron.co.il)", followers: "לערוץ היוטיוב יש 760 מנויים; נוכחות באינסטגרם ובמדיה חברתית אחרת מוזכרת באתר שלו, המתמקדת בחינוך יצירתי והורות.", views: "תלוי בנוכחות פעילה ב-IG/TikTok עבור Reels.", audienceAge: "28-55 (מחנכים, הורים, אנשי מקצוע המתעניינים בחינוך יצירתי והורות).", likelihood: "סביר", socials: [{text:"אתר", url:"http://eyaldoron.co.il"}] }
+        ];
+
+        const modal = document.getElementById('geminiModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        function showModal(title, content) {
+            modalTitle.textContent = title;
+            modalBody.innerHTML = content; 
+            modal.classList.add('visible');
+        }
+
+        function hideModal() {
+            modal.classList.remove('visible');
+        }
+
+        closeModalButton.addEventListener('click', hideModal);
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                hideModal();
+            }
+        });
+
+        async function callGeminiAPI(prompt) {
+            showModal("מעבד בקשה...", '<div class="loading-spinner"></div><p class="text-center text-sm text-slate-500">טוען נתונים מ-Gemini...</p>');
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Gemini API Error:', errorData);
+                    throw new Error(`שגיאת API: ${response.status} ${response.statusText}. ${errorData?.error?.message || ''}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error('Unexpected API response structure:', result);
+                    throw new Error('מבנה תשובה לא צפוי מה-API.');
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                return `<p class="text-red-600 text-center">אירעה שגיאה בעת פנייה ל-Gemini API: ${error.message}</p>`;
+            }
+        }
+        
+        function populateInsightsTable(filter = 'all') {
+            const tableBody = document.getElementById('insightsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; 
+            const filteredData = filter === 'all' ? insightsData : insightsData.filter(item => item.researcher === filter);
+
+            filteredData.forEach(item => {
+                const row = tableBody.insertRow();
+                row.className = 'hover:bg-sky-50';
+                row.insertCell().textContent = item.researcher;
+                row.insertCell().textContent = item.insight;
+                row.insertCell().textContent = item.sourceId;
+                
+                const actionCell = row.insertCell();
+                const button = document.createElement('button');
+                button.innerHTML = "✨ הרחב/י";
+                button.className = 'gemini-button';
+                button.onclick = async () => {
+                    const prompt = `Please elaborate on the following research insight in 2-3 concise sentences, explaining its potential implications for educational counseling or special education. Insight: "${item.insight}" (Researcher: ${item.researcher}). Respond in Hebrew.`;
+                    const geminiResponse = await callGeminiAPI(prompt);
+                    showModal(`הרחבה על תובנה מאת ${item.researcher}`, geminiResponse);
+                };
+                actionCell.appendChild(button);
+                Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
+            });
+        }
+        
+        document.getElementById('generateExecutiveSummaryBtn').addEventListener('click', async () => {
+            const introText = document.getElementById('tauAdvantageIntro').textContent;
+            const mainText = document.getElementById('tauAdvantageMainText').textContent;
+            const accordionContent = document.getElementById('tauAdvantageAccordionContent').innerText; // Get text content of bullet points
+            
+            const fullText = `${introText}\n\n${mainText}\n\nנקודות מפתח:\n${accordionContent}`;
+            
+            const prompt = `Based on the following text describing the advantages of Tel Aviv University's Master's program in Educational Counseling and Special Education, please generate a compelling executive summary of 3-4 bullet points, suitable for a busy decision-maker. Respond in Hebrew.\n\nText:\n"${fullText}"`;
+            const geminiResponse = await callGeminiAPI(prompt);
+            showModal("תקציר מנהלים (נוצר ע\"י Gemini)", geminiResponse);
+        });
+
+        function populateInfluencersTable(filterText = '') {
+            const tableBody = document.getElementById('influencersTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; 
+            
+            const filteredData = influencersData.filter(influencer => 
+                influencer.name.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            filteredData.forEach(item => {
+                const row = tableBody.insertRow();
+                row.className = 'hover:bg-sky-50';
+                row.insertCell().textContent = item.name;
+                row.insertCell().textContent = item.followers;
+                row.insertCell().textContent = item.views;
+                row.insertCell().textContent = item.audienceAge;
+                row.insertCell().textContent = item.likelihood;
+
+                const socialsCell = row.insertCell();
+                item.socials.forEach((social, index) => {
+                    const link = document.createElement('a');
+                    link.href = social.url === '#' ? 'javascript:void(0);' : social.url;
+                    link.textContent = social.text;
+                    link.target = social.url === '#' ? '' : '_blank';
+                    link.rel = social.url === '#' ? '' : 'noopener noreferrer';
+                    link.className = 'text-cyan-600 hover:text-cyan-800 underline';
+                    socialsCell.appendChild(link);
+                    if (index < item.socials.length - 1) {
+                        socialsCell.appendChild(document.createTextNode(', '));
+                    }
+                });
+                
+                const actionCell = row.insertCell();
+                const button = document.createElement('button');
+                button.innerHTML = "✨ הצע/י פנייה";
+                button.className = 'gemini-button';
+                button.onclick = async () => {
+                    const prompt = `Draft a short, personalized outreach message (2-3 sentences) in Hebrew to the influencer ${item.name} to explore a potential collaboration for promoting Tel Aviv University's Master's program in Educational Counseling and Special Education. Briefly mention their relevance to the field based on their profile. Profile details: Followers - ${item.followers}, Audience Age - ${item.audienceAge}.`;
+                    const geminiResponse = await callGeminiAPI(prompt);
+                    showModal(`הצעת פנייה ל${item.name}`, geminiResponse);
+                };
+                actionCell.appendChild(button);
+                Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
+            });
+        }
+        
+        // Utility to populate researcher filter
+        function populateResearcherFilter() {
+            const filterSelect = document.getElementById('researcherFilter');
+            const researchers = [...new Set(insightsData.map(item => item.researcher))];
+            researchers.sort().forEach(researcher => {
+                const option = document.createElement('option');
+                option.value = researcher;
+                option.textContent = researcher;
+                filterSelect.appendChild(option);
+            });
+        }
+        
+        // Chart for Researcher Insights
+        function renderResearcherInsightsChart() {
+            const ctx = document.getElementById('researcherInsightsChart').getContext('2d');
+            const insightsByResearcher = insightsData.reduce((acc, curr) => {
+                acc[curr.researcher] = (acc[curr.researcher] || 0) + 1;
+                return acc;
+            }, {});
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(insightsByResearcher),
+                    datasets: [{
+                        label: 'מספר תובנות',
+                        data: Object.values(insightsByResearcher),
+                        backgroundColor: 'rgba(8, 145, 178, 0.6)', 
+                        borderColor: 'rgba(8, 145, 178, 1)', 
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                font: { family: "'Inter', sans-serif" }
+                            }
+                        },
+                        x: {
+                             ticks: {
+                                font: { family: "'Inter', sans-serif" }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            titleFont: { family: "'Inter', sans-serif" },
+                            bodyFont: { family: "'Inter', sans-serif" },
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chart for Influencer Likelihood
+        function renderInfluencerLikelihoodChart() {
+            const ctx = document.getElementById('influencerLikelihoodChart').getContext('2d');
+            const likelihoodCounts = influencersData.reduce((acc, curr) => {
+                acc[curr.likelihood] = (acc[curr.likelihood] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const sortedLikelihoods = Object.entries(likelihoodCounts).sort(([,a],[,b]) => b-a);
+            const labels = sortedLikelihoods.map(entry => entry[0]);
+            const data = sortedLikelihoods.map(entry => entry[1]);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'מספר משפיענים',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(8, 145, 178, 0.6)', 
+                            'rgba(56, 189, 248, 0.6)', 
+                            'rgba(103, 232, 249, 0.6)' 
+                        ],
+                        borderColor: [
+                            'rgba(8, 145, 178, 1)',
+                            'rgba(56, 189, 248, 1)',
+                            'rgba(103, 232, 249, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', 
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                             ticks: {
+                                stepSize: 1,
+                                font: { family: "'Inter', sans-serif" }
+                            }
+                        },
+                        y: {
+                             ticks: {
+                                font: { family: "'Inter', sans-serif" }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                         tooltip: {
+                            titleFont: { family: "'Inter', sans-serif" },
+                            bodyFont: { family: "'Inter', sans-serif" },
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const targetTab = button.dataset.tab;
+                tabContents.forEach(content => {
+                    if (content.id === targetTab) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+        
+        document.querySelectorAll('.accordion-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('svg');
+                content.classList.toggle('open');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        document.getElementById('researcherFilter').addEventListener('change', function() {
+            populateInsightsTable(this.value);
+        });
+
+        document.getElementById('influencerFilter').addEventListener('input', function() {
+            populateInfluencersTable(this.value);
+        });
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        populateResearcherFilter();
+        populateInsightsTable();
+        populateInfluencersTable();
+        renderResearcherInsightsChart();
+        renderInfluencerLikelihoodChart();
+
+    </script>
+</body>
+</html>
