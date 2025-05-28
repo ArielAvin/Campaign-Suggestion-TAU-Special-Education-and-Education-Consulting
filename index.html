@@ -54,10 +54,11 @@
             gap: 1rem; /* space-y-4 or space-x-4 */
             margin-top: 1.5rem; /* mt-6 */
         }
-        @media (min-width: 640px) { /* sm */
+        @media (min-width: 768px) { /* md - Changed breakpoint for row layout */
             .button-container {
                 flex-direction: row; /* Buttons side-by-side on larger screens */
                 justify-content: center;
+                flex-wrap: wrap; /* Allow buttons to wrap if needed */
             }
         }
         .nav-button {
@@ -69,8 +70,10 @@
             text-decoration: none;
             display: inline-block; /* Ensure proper padding and width */
             width: 100%; /* Full width on small screens */
+            min-width: 200px; /* Minimum width for buttons */
+            border: 2px solid transparent; /* Base border for consistent sizing */
         }
-        @media (min-width: 640px) { /* sm */
+        @media (min-width: 768px) { /* md */
             .nav-button {
                 width: auto; /* Auto width on larger screens */
             }
@@ -78,38 +81,172 @@
         .button-traditional {
             background-color: #0ea5e9; /* sky-500 */
             color: white;
-            border: 2px solid #0ea5e9; /* sky-500 */
+            border-color: #0ea5e9; 
         }
         .button-traditional:hover {
             background-color: #0284c7; /* sky-600 */
-            border-color: #0284c7; /* sky-600 */
+            border-color: #0284c7; 
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.2), 0 4px 6px -2px rgba(14, 165, 233, 0.1);
         }
         .button-interactive {
             background-color: #0d9488; /* teal-600 */
             color: white;
-            border: 2px solid #0d9488; /* teal-600 */
+            border-color: #0d9488; 
         }
         .button-interactive:hover {
             background-color: #0f766e; /* teal-700 */
-            border-color: #0f766e; /* teal-700 */
+            border-color: #0f766e; 
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.2), 0 4px 6px -2px rgba(13, 148, 136, 0.1);
         }
+        .button-podcast {
+            background-color: #7c3aed; /* violet-600 */
+            color: white;
+            border-color: #7c3aed; 
+        }
+        .button-podcast:hover {
+            background-color: #6d28d9; /* violet-700 */
+            border-color: #6d28d9; 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.2), 0 4px 6px -2px rgba(124, 58, 237, 0.1);
+        }
+        .gemini-button-recommendation {
+            font-family: 'Assistant', sans-serif;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #db2777; /* pink-600 */
+            color: white;
+            border: 2px solid #db2777;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 1.5rem; /* Add some space above this button */
+            width: 100%;
+            max-width: 300px; /* Max width for this button */
+            display: block; /* Make it block to use margin auto */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .gemini-button-recommendation:hover {
+            background-color: #be185d; /* pink-700 */
+            border-color: #be185d;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(219, 39, 119, 0.2), 0 4px 6px -2px rgba(219, 39, 119, 0.1);
+        }
         .logo-container {
-            margin-bottom: 1.5rem; /* Add space below logo */
+            margin-bottom: 1.5rem; 
         }
         .logo-container img {
-            height: 50px; /* Adjust as needed */
+            height: 50px; 
             width: auto;
-            margin: 0 auto; /* Center the logo */
+            margin: 0 auto; 
         }
         footer {
-            margin-top: 3rem; /* Increased top margin */
+            margin-top: 3rem; 
             font-family: 'Frank Ruhl Libre', serif;
             font-size: 0.875rem; /* text-sm */
             color: #4b5563; /* gray-600 */
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 500px; /* Adjusted for this content */
+            max-height: 85vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            direction: rtl;
+        }
+        .modal-backdrop.visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.75rem;
+        }
+        .modal-title {
+             font-family: 'Assistant', sans-serif;
+             font-size: 1.25rem;
+             font-weight: 600;
+             color: #1e293b;
+        }
+        .modal-close-button {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #6b7280;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+        .modal-close-button:hover {
+            color: #111827;
+        }
+        .modal-body {
+             font-family: 'Frank Ruhl Libre', serif;
+             font-size: 1rem;
+             color: #374151;
+             line-height: 1.75;
+             white-space: pre-wrap;
+        }
+         .modal-body h3 {
+            font-family: 'Assistant', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0c4a6e;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-body ul {
+            list-style-type: disc;
+            padding-right: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .modal-body li {
+            margin-bottom: 0.25rem;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; 
+            border-top: 4px solid #db2777; /* Pink to match button */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -134,6 +271,24 @@
             <a href="campaign_proposal/Campaign_Suggestion_Interactive.html" class="nav-button button-interactive">
                 ✨ הצגה אינטראקטיבית
             </a>
+            <a href="campaign_proposal/podcast.html" class="nav-button button-podcast">
+                🎧 האזנה לפודקאסט
+            </a>
+        </div>
+
+        <button id="getRecommendationBtn" class="gemini-button-recommendation">
+            ✨ קבל/י המלצה אישית לבחירת תצוגה
+        </button>
+    </div>
+
+    <div id="geminiModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">המלצת צפייה</h3>
+                <button id="closeModalButton" class="modal-close-button">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                </div>
         </div>
     </div>
 
@@ -143,6 +298,106 @@
 
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const getRecommendationBtn = document.getElementById('getRecommendationBtn');
+        const geminiModal = document.getElementById('geminiModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        function showModal(title, contentHTML) {
+            modalTitle.textContent = title;
+            modalBody.innerHTML = contentHTML;
+            geminiModal.classList.add('visible');
+        }
+
+        function hideModal() {
+            geminiModal.classList.remove('visible');
+        }
+
+        closeModalButton.addEventListener('click', hideModal);
+        geminiModal.addEventListener('click', (event) => {
+            if (event.target === geminiModal) {
+                hideModal();
+            }
+        });
+
+        async function callGeminiAPIForRecommendation(prompt) {
+            showModal("מעבד בקשה...", '<div class="loading-spinner"></div><p class="text-center text-sm text-slate-500">טוען המלצה מ-Gemini...</p>');
+            
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Gemini API Error:', errorData);
+                    throw new Error(`שגיאת API: ${response.status} ${response.statusText}. ${errorData?.error?.message || ''}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    
+                    let formattedText = result.candidates[0].content.parts[0].text;
+                    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<h3>$1</h3>'); 
+                    formattedText = formattedText.replace(/\n\n/g, '<br><br>');
+                    formattedText = formattedText.replace(/\n/g, '<br>');
+                    formattedText = formattedText.replace(/<br>\s*[\*-]\s*/g, '<li>');
+                    if (formattedText.includes('<li>')) {
+                        formattedText = '<ul>' + formattedText.replace(/<li>/g, '</li><li>') + '</li></ul>';
+                        formattedText = formattedText.replace(/<\/li><\/ul><li>/g, '</ul><ul><li>');
+                        formattedText = formattedText.replace(/<\/ul><ul><\/ul>/g, '</ul>');
+                        formattedText = formattedText.replace(/<li>\s*<\/li>/g, '');
+                    }
+                    return formattedText;
+
+                } else {
+                    console.error('Unexpected API response structure:', result);
+                    throw new Error('מבנה תשובה לא צפוי מה-API.');
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                return `<p class="text-red-600 text-center">אירעה שגיאה בעת פנייה ל-Gemini API: ${error.message}</p>`;
+            }
+        }
+
+        if (getRecommendationBtn) {
+            getRecommendationBtn.addEventListener('click', async () => {
+                const proposalTopic = "הצעה לקמפיין שיווקי לתואר שני בייעוץ חינוכי וחינוך מיוחד באוניברסיטת תל אביב";
+                const availableViews = [
+                    { name: "הצגה מסורתית", description: "סקירה מפורטת ומקיפה של ההצעה, מתאימה למי שמעוניין בכל הפרטים." },
+                    { name: "הצגה אינטראקטיבית", description: "חוויה דינמית עם טבלאות אינטראקטיביות, תרשימים ואפשרויות הרחבה, מתאימה למי שאוהב לחקור ולהתעמק באופן פעיל." },
+                    { name: "האזנה לפודקאסט", description: "תקציר קולי של עיקרי הדברים, מתאים למי שמעדיף האזנה או מעוניין בסקירה מהירה." }
+                ];
+
+                let viewsDescription = availableViews.map(v => `* ${v.name}: ${v.description}`).join('\n');
+
+                const prompt = `שלום, אני מתעניין ב-"${proposalTopic}".
+                יש לי שלוש אפשרויות לצרוך את המידע:
+                ${viewsDescription}
+
+                אנא ספק לי המלצה קצרה (2-3 משפטים) שתעזור לי לבחור את התצוגה המתאימה ביותר עבורי, אולי בהתאם לסוג המידע שאני מחפש או סגנון הלמידה המועדף עליי.
+                לאחר מכן, אנא סכם בקצרה (משפט אחד או שניים) את מטרת הקמפיין.
+                השב בעברית.`;
+                
+                const geminiResponse = await callGeminiAPIForRecommendation(prompt);
+                showModal("✨ המלצת צפייה אישית", geminiResponse);
+            });
+        }
+
     </script>
 </body>
 </html>

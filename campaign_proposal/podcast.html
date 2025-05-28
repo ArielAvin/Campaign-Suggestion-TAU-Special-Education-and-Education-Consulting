@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פודקאסט: ייעוץ חינוכי ומחקר בלקויות למידה | אוניברסיטת תל אביב</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Frank+Ruhl+Libre:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #f0f9ff; /* Tailwind sky-50 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            color: #1e293b; /* slate-800 */
+        }
+        .font-frank { font-family: 'Frank Ruhl Libre', serif; }
+        .container-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Tailwind shadow-2xl */
+            width: 100%;
+            max-width: 48rem; /* max-w-3xl */
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .container-card h1 {
+            font-family: 'Assistant', sans-serif;
+            font-size: 2rem; /* text-3xl */
+            font-weight: 700; /* bold */
+            color: #0c4a6e; /* sky-800 */
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+        @media (min-width: 640px) { /* sm */
+            .container-card h1 {
+                font-size: 2.5rem; /* text-4xl */
+            }
+        }
+        .container-card p.intro {
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 1.125rem; /* text-lg */
+            color: #374151; /* gray-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            line-height: 1.75; /* leading-relaxed */
+            text-align: right;
+        }
+        audio {
+            width: 100%;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem; /* Adjusted margin */
+            border-radius: 0.375rem; /* rounded-md */
+            border: 1px solid #e5e7eb; /* gray-200 */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm */
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #f9fafb; /* gray-50 */
+            border-radius: 0.375rem;
+        }
+        audio::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-mute-button {
+            color: #0d9488; /* teal-600 */
+        }
+        audio::-webkit-media-controls-timeline,
+        audio::-webkit-media-controls-volume-slider {
+            cursor: pointer;
+        }
+        .gemini-feature-section {
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .gemini-button {
+            background-color: #14b8a6; /* teal-500 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1rem; /* text-base */
+            font-family: 'Assistant', sans-serif;
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .gemini-button:hover {
+            background-color: #0d9488; /* teal-600 */
+            transform: translateY(-1px);
+        }
+        .back-link-container {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        .back-link {
+            font-family: 'Assistant', sans-serif;
+            font-weight: 600;
+            padding: 0.625rem 1.25rem; /* py-2.5 px-5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: #0284c7; /* sky-600 */
+        }
+        footer {
+            margin-top: auto;
+            padding-top: 2rem;
+            padding-bottom: 1rem;
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
+            text-align: center;
+        }
+        .logo-container {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .logo-container img {
+            height: 40px;
+            width: auto;
+            margin: 0 auto;
+        }
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem 2rem; /* Adjusted padding */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 600px; /* Increased max-width */
+            max-height: 85vh; /* Increased max-height */
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            direction: rtl; /* Ensure modal content is RTL */
+        }
+        .modal-backdrop.visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+            padding-bottom: 0.75rem;
+        }
+        .modal-title {
+             font-family: 'Assistant', sans-serif;
+             font-size: 1.25rem; /* text-xl */
+             font-weight: 600; /* semibold */
+             color: #1e293b; /* slate-800 */
+        }
+        .modal-close-button {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #6b7280; /* gray-500 */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+        .modal-close-button:hover {
+            color: #111827; /* gray-900 */
+        }
+        .modal-body {
+             font-family: 'Frank Ruhl Libre', serif;
+             font-size: 1rem; /* text-base */
+             color: #374151; /* gray-700 */
+             line-height: 1.75; /* leading-relaxed */
+             white-space: pre-wrap; /* Preserve line breaks from Gemini */
+        }
+        .modal-body h3 { /* For subheadings within Gemini response */
+            font-family: 'Assistant', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0c4a6e; /* sky-800 */
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-body ul {
+            list-style-type: disc;
+            padding-right: 1.5rem; /* Indent for RTL */
+            margin-bottom: 1rem;
+        }
+        .modal-body li {
+            margin-bottom: 0.25rem;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; 
+            border-top: 4px solid #0d9488; /* Teal */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-card">
+        <div class="logo-container">
+            <div class="text-xl font-bold text-sky-700">אוניברסיטת תל אביב</div>
+        </div>
+
+        <h1>האזינו לפודקאסט: חידושים בייעוץ חינוכי ומחקר בלקויות למידה</h1>
+        <p class="intro font-frank">
+            בפודקאסט זה, אנו מעמיקים בתובנות המרכזיות מתוך ההצעה לקמפיין שיווקי לתואר שני בייעוץ חינוכי וחינוך מיוחד.
+            גלו את פריצות הדרך האחרונות בתחום, וכיצד הן מעצבות מחדש את הבנתנו בשיטות ייעוץ, התמודדות עם לקויות למידה והתערבויות חינוכיות מתקדמות.
+        </p>
+
+        <audio controls preload="metadata">
+            <source src="__Rewiring Minds_BrainScience_Breakthroughs_in_Learning_Attention_and_Education__.mp3" type="audio/mpeg">
+            הדפדפן שלך אינו תומך ברכיב השמע.
+        </audio>
+
+        <div class="gemini-feature-section">
+            <button id="generatePodcastInsightsBtn" class="gemini-button">
+                ✨ הפק תובנות מרכזיות ושאלות לדיון
+            </button>
+        </div>
+
+        <div class="back-link-container">
+            <a href="../index.html" class="back-link">חזרה לדף הראשי</a>
+        </div>
+    </div>
+
+    <div id="geminiModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">תובנות מהפודקאסט</h3>
+                <button id="closeModalButton" class="modal-close-button">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> הצעה לקמפיין שיווקי. כל הזכויות שמורות (דוגמה).</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const generatePodcastInsightsBtn = document.getElementById('generatePodcastInsightsBtn');
+        const geminiModal = document.getElementById('geminiModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        function showModal(title, contentHTML) {
+            modalTitle.textContent = title;
+            modalBody.innerHTML = contentHTML; // Use innerHTML to allow for formatted text
+            geminiModal.classList.add('visible');
+        }
+
+        function hideModal() {
+            geminiModal.classList.remove('visible');
+        }
+
+        closeModalButton.addEventListener('click', hideModal);
+        geminiModal.addEventListener('click', (event) => {
+            if (event.target === geminiModal) { // Close if backdrop is clicked
+                hideModal();
+            }
+        });
+
+        async function callGeminiAPI(prompt) {
+            showModal("מעבד בקשה...", '<div class="loading-spinner"></div><p class="text-center text-sm text-slate-500">טוען תובנות מ-Gemini...</p>');
+            
+            // API Key - leave empty, will be handled by the environment
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Gemini API Error:', errorData);
+                    throw new Error(`שגיאת API: ${response.status} ${response.statusText}. ${errorData?.error?.message || ''}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    // Format the response text with HTML for better readability
+                    let formattedText = result.candidates[0].content.parts[0].text;
+                    // Make headings bold and add some spacing
+                    formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<h3>$1</h3>'); // Bold text like **Key Takeaways:**
+                    formattedText = formattedText.replace(/\n\n/g, '<br><br>'); // Preserve double newlines as paragraph breaks
+                    formattedText = formattedText.replace(/\n/g, '<br>'); // Preserve single newlines
+                     // Basic list formatting (assumes '*' or '-' for list items)
+                    formattedText = formattedText.replace(/<br>\s*[\*-]\s*/g, '<li>');
+                    if (formattedText.includes('<li>')) {
+                        formattedText = '<ul>' + formattedText.replace(/<li>/g, '</li><li>') + '</li></ul>';
+                        formattedText = formattedText.replace(/<\/li><\/ul><li>/g, '</ul><ul><li>'); // Handle multiple lists
+                        formattedText = formattedText.replace(/<\/ul><ul><\/ul>/g, '</ul>'); // Clean up empty lists
+                        formattedText = formattedText.replace(/<li>\s*<\/li>/g, ''); // Remove empty list items
+                    }
+
+                    return formattedText;
+                } else {
+                    console.error('Unexpected API response structure:', result);
+                    throw new Error('מבנה תשובה לא צפוי מה-API.');
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                return `<p class="text-red-600 text-center">אירעה שגיאה בעת פנייה ל-Gemini API: ${error.message}</p>`;
+            }
+        }
+
+        if (generatePodcastInsightsBtn) {
+            generatePodcastInsightsBtn.addEventListener('click', async () => {
+                const podcastTheme = "חידושים בייעוץ חינוכי ומחקר בלקויות למידה"; // Extracted from H1 and P
+                const prompt = `הנושא של הפודקאסט הוא "${podcastTheme}". 
+                בהתבסס על נושא זה, אנא הפק:
+                1.  3-4 תובנות מרכזיות עיקריות.
+                2.  2-3 שאלות מעוררות מחשבה לדיון, המתאימות לסטודנטים או לאנשי מקצוע בתחום.
+                השב בעברית. אנא השתמש בכותרות ברורות (למשל, "**תובנות מרכזיות:**" ו-"**שאלות לדיון:**") וסמן רשימות עם כוכביות או מקפים.`;
+                
+                const geminiResponse = await callGeminiAPI(prompt);
+                showModal("תובנות ושאלות מהפודקאסט (נוצר ע\"י Gemini)", geminiResponse);
+            });
+        }
+
+    </script>
+</body>
+</html>
