@@ -130,66 +130,6 @@
             width: 100%;
              -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
-        .gemini-button {
-            background-color: #14b8a6; /* teal-500 */
-            color: white;
-            padding: 0.3rem 0.6rem;
-            border-radius: 0.375rem; /* rounded-md */
-            font-size: 0.8rem;
-            font-family: 'Assistant', sans-serif;
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-        .gemini-button:hover {
-            background-color: #0d9488; /* teal-600 */
-        }
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-        }
-        .modal-backdrop.visible .modal-content {
-            transform: scale(1);
-        }
-        .loading-spinner {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #0d9488; /* Teal */
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body class="font-frank">
@@ -207,7 +147,6 @@
                             <th>חוקר/ת</th>
                             <th>תגלית חדשנית / תובנת 'שורה תחתונה' מעוררת השראה</th>
                             <th>מזהה מקור (פנימי)</th>
-                            <th>פעולה</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -263,8 +202,7 @@
                     </ul>
                 </li>
             </ul>
-            <button id="generateExecutiveSummary" class="gemini-button mt-4">✨ צור/י תקציר מנהלים משכנע</button>
-        </section>
+            </section>
 
         <hr/>
 
@@ -280,7 +218,6 @@
                             <th>גיל הקהל (משוער)</th>
                             <th>סבירות לקבל חוזה מאת"א</th>
                             <th>רשתות חברתיות</th>
-                            <th>פעולה</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -292,17 +229,6 @@
         <footer class="mt-16 pt-8 border-t border-slate-300 text-center">
             <p class="text-sm text-slate-500 font-frank">© <span id="currentYear"></span> מתווה הצעה לקמפיין שיווקי. כל הזכויות שמורות (דוגמה).</p>
         </footer>
-    </div>
-
-    <div id="geminiModal" class="modal-backdrop">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modalTitle" class="text-xl font-assistant font-semibold text-slate-700">תשובת Gemini</h3>
-                <button id="closeModalButton" class="text-slate-500 hover:text-slate-700">&times;</button>
-            </div>
-            <div id="modalBody" class="font-frank text-slate-600 leading-relaxed">
-                </div>
-        </div>
     </div>
 
     <script>
@@ -322,7 +248,7 @@
             { researcher: "פרופ' דורית ארם", insight: "מודל 'מחומש ההורות' מציע תוכנית מעשית להורות מיטבית המבוססת על חמישה מרכיבים חיוניים וקשורים זה בזה. עיקרון מעורר השראה מהמודל הוא: 'אנו יולדים את ילדינו עבורנו (נרקיסיסטי ואגואיסטי) אבל עלינו לגדלם עבורם!'", sourceId: "16" },
             { researcher: "פרופ' דורית ארם", insight: "איכות האינטראקציות בין הורה לילד במהלך פעילויות כמו קריאת ספר משותפת וכתיבה שיתופית משפיעה באופן משמעותי לא רק על התפתחות האוריינות המוקדמת של הילד אלא גם על צמיחתו ומסוגלותו החברתית-רגשית, השפעה הנצפית גם אצל ילדים עם צרכים מיוחדים.", sourceId: "9" },
             { researcher: "פרופ' לילך שלו-מבורך", insight: "ממצא חדשני בנוגע להפרעת הספקטרום האוטיסטי (ASD) מצביע על כך שאופן עיבוד מידע חזותי היררכי (הבחנה בין 'היער' ל'עצים') אצל אנשים עם ASD מושפע יותר מתגובה מוגזמת למה שבולט או 'מושך תשומת לב' בשדה הראייה שלהם, מאשר מהטיה פנימית קבועה להתמקדות בפרטים מקומיים.", sourceId: "21" },
-            { researcher: "פרופ' לילך שלו-מבורך", insight: "המחקר חשף קשר בין חומרת תסמיני ADHD ליעילות של רשתות מוחיות ספציפיות (הרשת הפרונטו-פריאטלית) במהלך משימות הדורשות עיכוב תגובה. קורלציה הפוכה זו מצביעה על סמן נוירולוגי פוטנציאלי ל-ADHD.", sourceId: "21" },
+            { researcher: "פרופ' לילך שלו-מבורך", insight: "המחקר חשף קשר בין חומרת תסמיני ADHD ליעילות של רשתות מוחיות ספציфиות (הרשת הפרונטו-פריאטלית) במהלך משימות הדורשות עיכוב תגובה. קורלציה הפוכה זו מצביעה על סמן נוירולוגי פוטנציאלי ל-ADHD.", sourceId: "21" },
             { researcher: "פרופ' לילך שלו-מבורך", insight: "פריצת דרך משמעותית מראה שתוכניות אימון קשב ממוקדות, כגון אימון קשב מתקדם ממוחשב (CPAT), יכולות להוביל לשיפורים מוחשיים ומשמעותיים בתפקוד האקדמי של ילדים עם הפרעת הספקטרום האוטיסטי.", sourceId: "21" },
             { researcher: "פרופ' לילך שלו-מבורך", insight: "תובנה אבחונית חשובה היא שתסמינים הדומים לאלו של הפרעות קשב יכולים לעיתים להיות מיוחסים לבעיות נפוצות אך לעיתים קרובות מתעלמים מהן, כמו עייפות כרונית או תזונה לקויה. הדבר מדגיש את ההכרח בהערכה מקיפה והוליסטית לפני אבחון ADHD.", sourceId: "23" },
             { researcher: "פרופ' לילך שלו-מבורך", insight: "המעבדה של פרופ' שלו-מבורך זיהתה דפוסים ספציפיים ומדידים בתנועות עיניים המתרחשים במהלך קריאה, היכולים להבחין בקריאה לא קשובה אצל אנשים עם ADHD. ממצא זה מהווה צעד לקראת פיתוח מדדים אובייקטיביים יותר לאתגרי קשב.", sourceId: "22" },
@@ -370,66 +296,7 @@
             { name: "ד\"ר אייל דורון (eyaldoron.co.il)", followers: "לערוץ היוטיוב יש 760 מנויים; נוכחות באינסטגרם ובמדיה חברתית אחרת מוזכרת באתר שלו, המתמקדת בחינוך יצירתי והורות.", views: "תלוי בנוכחות פעילה ב-IG/TikTok עבור Reels.", audienceAge: "28-55 (מחנכים, הורים, אנשי מקצוע המתעניינים בחינוך יצירתי והורות).", likelihood: "סביר", socials: [{text:"אתר", url:"http://eyaldoron.co.il"}] }
         ];
 
-        const modal = document.getElementById('geminiModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalBody = document.getElementById('modalBody');
-        const closeModalButton = document.getElementById('closeModalButton');
-
-        function showModal(title, content) {
-            modalTitle.textContent = title;
-            modalBody.innerHTML = content; // Use innerHTML to allow for loading spinner
-            modal.classList.add('visible');
-        }
-
-        function hideModal() {
-            modal.classList.remove('visible');
-        }
-
-        closeModalButton.addEventListener('click', hideModal);
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                hideModal();
-            }
-        });
-
-        async function callGeminiAPI(prompt) {
-            showModal("מעבד בקשה...", '<div class="loading-spinner"></div><p class="text-center">טוען נתונים מ-Gemini...</p>');
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{ role: "user", parts: [{ text: prompt }] }]
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Gemini API Error:', errorData);
-                    throw new Error(`שגיאת API: ${response.status} ${response.statusText}. ${errorData?.error?.message || ''}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    console.error('Unexpected API response structure:', result);
-                    throw new Error('מבנה תשובה לא צפוי מה-API.');
-                }
-            } catch (error) {
-                console.error('Error calling Gemini API:', error);
-                return `<p class="text-red-600">אירעה שגיאה בעת פנייה ל-Gemini API: ${error.message}</p>`;
-            }
-        }
-
+        // Removed Gemini-related functions: showModal, hideModal, callGeminiAPI
 
         function populateInsightsTable() {
             const tableBody = document.getElementById('insightsTable').getElementsByTagName('tbody')[0];
@@ -439,17 +306,7 @@
                 row.insertCell().textContent = item.researcher;
                 row.insertCell().textContent = item.insight;
                 row.insertCell().textContent = item.sourceId;
-                
-                const actionCell = row.insertCell();
-                const button = document.createElement('button');
-                button.innerHTML = "✨ הרחב/י";
-                button.className = 'gemini-button';
-                button.onclick = async () => {
-                    const prompt = `Please elaborate on the following research insight in 2-3 concise sentences, explaining its potential implications for educational counseling or special education. Insight: "${item.insight}" (Researcher: ${item.researcher}). Respond in Hebrew.`;
-                    const geminiResponse = await callGeminiAPI(prompt);
-                    showModal(`הרחבה על תובנה מאת ${item.researcher}`, geminiResponse.replace(/\n/g, '<br>'));
-                };
-                actionCell.appendChild(button);
+                // Removed Action Cell for Gemini button
                 Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
             });
         }
@@ -465,19 +322,12 @@
                 link.target = "_blank";
                 link.rel = "noopener noreferrer";
                 listItem.appendChild(link);
-                listItem.innerHTML += ` (accessed May 28, 2025)`;
+                listItem.innerHTML += ` (accessed May 28, 2025)`; // Assuming a static access date for this version
                 listElement.appendChild(listItem);
             });
         }
         
-        document.getElementById('generateExecutiveSummary').addEventListener('click', async () => {
-            const advantageText = document.getElementById('tauAdvantageText').textContent;
-            const advantageBullets = Array.from(document.getElementById('tauAdvantageBullets').getElementsByTagName('li')).map(li => li.textContent.trim()).join('\n');
-            const fullText = `${advantageText}\n\nנקודות מפתח:\n${advantageBullets}`;
-            const prompt = `Based on the following text describing the advantages of Tel Aviv University's Master's program in Educational Counseling and Special Education, please generate a compelling executive summary of 3-4 bullet points, suitable for a busy decision-maker. Respond in Hebrew.\n\nText:\n"${fullText}"`;
-            const geminiResponse = await callGeminiAPI(prompt);
-            showModal("תקציר מנהלים (נוצר ע\"י Gemini)", geminiResponse.replace(/\n/g, '<br>'));
-        });
+        // Removed event listener for 'generateExecutiveSummary' button as it was Gemini-related
 
         function populateInfluencersTable() {
             const tableBody = document.getElementById('influencersTable').getElementsByTagName('tbody')[0];
@@ -502,17 +352,7 @@
                         socialsCell.appendChild(document.createTextNode(', '));
                     }
                 });
-                
-                const actionCell = row.insertCell();
-                const button = document.createElement('button');
-                button.innerHTML = "✨ הצע/י פנייה";
-                button.className = 'gemini-button';
-                button.onclick = async () => {
-                    const prompt = `Draft a short, personalized outreach message (2-3 sentences) in Hebrew to the influencer ${item.name} to explore a potential collaboration for promoting Tel Aviv University's Master's program in Educational Counseling and Special Education. Briefly mention their relevance to the field based on their profile. Profile details: Followers - ${item.followers}, Audience Age - ${item.audienceAge}.`;
-                    const geminiResponse = await callGeminiAPI(prompt);
-                    showModal(`הצעת פנייה ל${item.name}`, geminiResponse.replace(/\n/g, '<br>'));
-                };
-                actionCell.appendChild(button);
+                // Removed Action Cell for Gemini button
                 Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
             });
         }

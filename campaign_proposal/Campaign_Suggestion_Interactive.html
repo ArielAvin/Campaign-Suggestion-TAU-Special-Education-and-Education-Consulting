@@ -64,81 +64,12 @@
         .table-container::-webkit-scrollbar-thumb:hover {
             background: #64748b; 
         }
-        .gemini-button {
-            background-color: #14b8a6; /* teal-500 */
-            color: white;
-            padding: 0.3rem 0.6rem;
-            border-radius: 0.375rem; /* rounded-md */
-            font-size: 0.8rem;
-            font-family: 'Assistant', sans-serif; /* Consistent font */
-            transition: background-color 0.2s;
-            cursor: pointer;
-            border: none;
-            line-height: 1.2; /* Adjust line height for better emoji alignment */
-        }
-        .gemini-button:hover {
-            background-color: #0d9488; /* teal-600 */
-        }
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 1.5rem; /* Adjusted padding */
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-            font-family: 'Inter', sans-serif; /* Consistent font for modal */
-        }
-        .modal-backdrop.visible .modal-content {
-            transform: scale(1);
-        }
-        .modal-title {
-             font-family: 'Assistant', sans-serif; /* Consistent font */
-        }
-        .modal-body {
-             font-family: 'Inter', sans-serif; /* Consistent font */
-             white-space: pre-wrap; /* Preserve line breaks from Gemini */
-        }
-        .loading-spinner {
-            border: 4px solid #f3f3f3; 
-            border-top: 4px solid #0d9488; /* Teal */
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* Removed Gemini button and modal styles as they are no longer needed */
     </style>
     <!-- Visualization & Content Choices:
-        Section 1 (Insights): HTML table, JS row highlight/filter, Chart.js bar chart, Gemini API for insight elaboration. Goal: Inform, Explore, Deepen Understanding. Justification: Clear presentation, visual summary, contextual expansion.
-        Section 2 (TAU Advantage): HTML text, JS accordion, Gemini API for executive summary. Goal: Persuade, Inform, Summarize. Justification: Readable summary, quick overview for busy users.
-        Section 3 (Influencers): HTML table, JS sort/filter, Chart.js bar chart, Gemini API for outreach drafts. Goal: Compare, Organize, Inform, Facilitate Action. Justification: Data exploration, visual summary, starting point for communication.
+        Section 1 (Insights): HTML table, JS row highlight/filter, Chart.js bar chart. Goal: Inform, Explore. Justification: Clear presentation, visual summary.
+        Section 2 (TAU Advantage): HTML text, JS accordion. Goal: Persuade, Inform. Justification: Readable summary, quick overview.
+        Section 3 (Influencers): HTML table, JS sort/filter, Chart.js bar chart. Goal: Compare, Organize, Inform. Justification: Data exploration, visual summary.
         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8" dir="rtl">
@@ -159,7 +90,7 @@
             <section id="insights" class="tab-content space-y-6">
                 <h2 class="text-2xl font-semibold text-cyan-600 border-r-4 border-cyan-500 pr-4">תובנות מחקר מרכזיות</h2>
                 <p class="text-slate-600 leading-relaxed">
-                    חלק זה מרכז תגליות ותובנות 'שורה תחתונה' מעוררות השראה מחוקרים מובילים בתחומים הרלוונטיים להצעה. כל תובנה מחוברת למקור מידע פנימי (מספרי) ומציעה הצצה למחקרים התומכים בגישות ובנושאים שבהם מתמקד התואר השני. ניתן לסנן את התובנות לפי שם החוקר/ת או להרחיב עליהן באמצעות Gemini.
+                    חלק זה מרכז תגליות ותובנות 'שורה תחתונה' מעוררות השראה מחוקרים מובילים בתחומים הרלוונטיים להצעה. כל תובנה מחוברת למקור מידע פנימי (מספרי) ומציעה הצצה למחקרים התומכים בגישות ובנושאים שבהם מתמקד התואר השני. ניתן לסנן את התובנות לפי שם החוקר/ת.
                 </p>
                 
                 <div class="my-4">
@@ -176,8 +107,7 @@
                                 <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">חוקר/ת</th>
                                 <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">תגלית / תובנה מרכזית</th>
                                 <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">מזהה מקור</th>
-                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">פעולה</th>
-                            </tr>
+                                </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
                             </tbody>
@@ -247,13 +177,12 @@
                         </ul>
                     </div>
                 </div>
-                <button id="generateExecutiveSummaryBtn" class="gemini-button mt-4">✨ צור/י תקציר מנהלים משכנע</button>
-            </section>
+                </section>
 
             <section id="influencers" class="tab-content hidden space-y-6">
                 <h2 class="text-2xl font-semibold text-cyan-600 border-r-4 border-cyan-500 pr-4">פלטפורמה ומשווקי מפתח (יוצרי תוכן)</h2>
                  <p class="text-slate-600 leading-relaxed">
-                    חלק זה מציג רשימה של משווקי מפתח פוטנציאליים ויוצרי תוכן, עם נתונים על קהל העוקבים שלהם, הערכת צפיות, גיל קהל היעד המשוער, וסבירות לשיתוף פעולה עם אוניברסיטת תל אביב. המידע נועד לסייע בבחירת שותפים מתאימים לקמפיין השיווקי. ניתן לסנן את רשימת המשפיענים לפי שמם או להציע להם פנייה אישית באמצעות Gemini.
+                    חלק זה מציג רשימה של משווקי מפתח פוטנציאליים ויוצרי תוכן, עם נתונים על קהל העוקבים שלהם, הערכת צפיות, גיל קהל היעד המשוער, וסבירות לשיתוף פעולה עם אוניברסיטת תל אביב. המידע נועד לסייע בבחירת שותפים מתאימים לקמפיין השיווקי. ניתן לסנן את רשימת המשפיענים לפי שמם.
                 </p>
 
                 <div class="my-4">
@@ -271,8 +200,7 @@
                                 <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">גיל הקהל (משוער)</th>
                                 <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">סבירות לקבל חוזה מאת"א</th>
                                 <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">רשתות חברתיות</th>
-                                <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-600 tracking-wider">פעולה</th>
-                            </tr>
+                                </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
                             </tbody>
@@ -292,17 +220,6 @@
         </footer>
     </div>
     
-    <div id="geminiModal" class="modal-backdrop">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modalTitle" class="modal-title text-xl font-semibold text-slate-700">תשובת Gemini</h3>
-                <button id="closeModalButton" class="text-slate-500 hover:text-slate-700 text-2xl leading-none">&times;</button>
-            </div>
-            <div id="modalBody" class="modal-body text-slate-600 leading-relaxed">
-                </div>
-        </div>
-    </div>
-
     <script>
         const insightsData = [
             { researcher: "פרופ' ריקרדו טרש", insight: "למוח האנושי קיבולת גמישות יוצאת דופן הניתנת לאימון (אימון מוחי) באמצעות תרגולים כמו מיינדפולנס, המובילים לשינויים קוגניטיביים ורגשיים.", sourceId: "1" },
@@ -342,65 +259,7 @@
             { name: "ד\"ר אייל דורון (eyaldoron.co.il)", followers: "לערוץ היוטיוב יש 760 מנויים; נוכחות באינסטגרם ובמדיה חברתית אחרת מוזכרת באתר שלו, המתמקדת בחינוך יצירתי והורות.", views: "תלוי בנוכחות פעילה ב-IG/TikTok עבור Reels.", audienceAge: "28-55 (מחנכים, הורים, אנשי מקצוע המתעניינים בחינוך יצירתי והורות).", likelihood: "סביר", socials: [{text:"אתר", url:"http://eyaldoron.co.il"}] }
         ];
 
-        const modal = document.getElementById('geminiModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalBody = document.getElementById('modalBody');
-        const closeModalButton = document.getElementById('closeModalButton');
-
-        function showModal(title, content) {
-            modalTitle.textContent = title;
-            modalBody.innerHTML = content; 
-            modal.classList.add('visible');
-        }
-
-        function hideModal() {
-            modal.classList.remove('visible');
-        }
-
-        closeModalButton.addEventListener('click', hideModal);
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                hideModal();
-            }
-        });
-
-        async function callGeminiAPI(prompt) {
-            showModal("מעבד בקשה...", '<div class="loading-spinner"></div><p class="text-center text-sm text-slate-500">טוען נתונים מ-Gemini...</p>');
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{ role: "user", parts: [{ text: prompt }] }]
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Gemini API Error:', errorData);
-                    throw new Error(`שגיאת API: ${response.status} ${response.statusText}. ${errorData?.error?.message || ''}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    console.error('Unexpected API response structure:', result);
-                    throw new Error('מבנה תשובה לא צפוי מה-API.');
-                }
-            } catch (error) {
-                console.error('Error calling Gemini API:', error);
-                return `<p class="text-red-600 text-center">אירעה שגיאה בעת פנייה ל-Gemini API: ${error.message}</p>`;
-            }
-        }
+        // Removed Gemini-related functions: showModal, hideModal, callGeminiAPI
         
         function populateInsightsTable(filter = 'all') {
             const tableBody = document.getElementById('insightsTable').getElementsByTagName('tbody')[0];
@@ -413,32 +272,12 @@
                 row.insertCell().textContent = item.researcher;
                 row.insertCell().textContent = item.insight;
                 row.insertCell().textContent = item.sourceId;
-                
-                const actionCell = row.insertCell();
-                const button = document.createElement('button');
-                button.innerHTML = "✨ הרחב/י";
-                button.className = 'gemini-button';
-                button.onclick = async () => {
-                    const prompt = `Please elaborate on the following research insight in 2-3 concise sentences, explaining its potential implications for educational counseling or special education. Insight: "${item.insight}" (Researcher: ${item.researcher}). Respond in Hebrew.`;
-                    const geminiResponse = await callGeminiAPI(prompt);
-                    showModal(`הרחבה על תובנה מאת ${item.researcher}`, geminiResponse);
-                };
-                actionCell.appendChild(button);
+                // Removed Action Cell for Gemini button
                 Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
             });
         }
         
-        document.getElementById('generateExecutiveSummaryBtn').addEventListener('click', async () => {
-            const introText = document.getElementById('tauAdvantageIntro').textContent;
-            const mainText = document.getElementById('tauAdvantageMainText').textContent;
-            const accordionContent = document.getElementById('tauAdvantageAccordionContent').innerText; // Get text content of bullet points
-            
-            const fullText = `${introText}\n\n${mainText}\n\nנקודות מפתח:\n${accordionContent}`;
-            
-            const prompt = `Based on the following text describing the advantages of Tel Aviv University's Master's program in Educational Counseling and Special Education, please generate a compelling executive summary of 3-4 bullet points, suitable for a busy decision-maker. Respond in Hebrew.\n\nText:\n"${fullText}"`;
-            const geminiResponse = await callGeminiAPI(prompt);
-            showModal("תקציר מנהלים (נוצר ע\"י Gemini)", geminiResponse);
-        });
+        // Removed event listener for 'generateExecutiveSummaryBtn' as it was Gemini-related
 
         function populateInfluencersTable(filterText = '') {
             const tableBody = document.getElementById('influencersTable').getElementsByTagName('tbody')[0];
@@ -470,22 +309,11 @@
                         socialsCell.appendChild(document.createTextNode(', '));
                     }
                 });
-                
-                const actionCell = row.insertCell();
-                const button = document.createElement('button');
-                button.innerHTML = "✨ הצע/י פנייה";
-                button.className = 'gemini-button';
-                button.onclick = async () => {
-                    const prompt = `Draft a short, personalized outreach message (2-3 sentences) in Hebrew to the influencer ${item.name} to explore a potential collaboration for promoting Tel Aviv University's Master's program in Educational Counseling and Special Education. Briefly mention their relevance to the field based on their profile. Profile details: Followers - ${item.followers}, Audience Age - ${item.audienceAge}.`;
-                    const geminiResponse = await callGeminiAPI(prompt);
-                    showModal(`הצעת פנייה ל${item.name}`, geminiResponse);
-                };
-                actionCell.appendChild(button);
+                // Removed Action Cell for Gemini button
                 Array.from(row.cells).forEach(cell => cell.className = 'px-4 py-3 text-slate-700 align-top');
             });
         }
         
-        // Utility to populate researcher filter
         function populateResearcherFilter() {
             const filterSelect = document.getElementById('researcherFilter');
             const researchers = [...new Set(insightsData.map(item => item.researcher))];
@@ -497,7 +325,6 @@
             });
         }
         
-        // Chart for Researcher Insights
         function renderResearcherInsightsChart() {
             const ctx = document.getElementById('researcherInsightsChart').getContext('2d');
             const insightsByResearcher = insightsData.reduce((acc, curr) => {
@@ -552,7 +379,6 @@
             });
         }
 
-        // Chart for Influencer Likelihood
         function renderInfluencerLikelihoodChart() {
             const ctx = document.getElementById('influencerLikelihoodChart').getContext('2d');
             const likelihoodCounts = influencersData.reduce((acc, curr) => {
